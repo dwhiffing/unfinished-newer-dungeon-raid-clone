@@ -7,33 +7,65 @@ export default class ArrowService {
     this.group.x = 35
     this.group.y = 160
     this.arrows = []
-    this.addArrow = this.addArrow.bind(this)
+    this.updateArrow = this.updateArrow.bind(this)
   }
 
-  addArrow (tiles) {
-    const arrow = this.game.add.sprite(tiles[1].x, tiles[1].y, 'arrows')
-    arrow.anchor.set(0.5)
-    this.group.add(arrow)
-    this.arrows.push(arrow)
+  updateArrow (tiles) {
+    this.clear()
+    tiles.forEach((tile, index) => {
+      if (index === 0) {
+        return
+      }
 
-    const diff = new Phaser.Point(tiles[0].coordinate.x, tiles[0].coordinate.y)
-    diff.subtract(tiles[1].coordinate.x, tiles[1].coordinate.y)
+      const arrow = this.game.add.sprite(
+        tiles[index - 1].x,
+        tiles[index - 1].y,
+        'arrows'
+      )
+      arrow.anchor.set(0.5)
+      this.group.add(arrow)
+      this.arrows.push(arrow)
 
-    if (diff.x === 0) {
-      arrow.angle = -90 * diff.y
-    } else {
-      arrow.angle = 90 * (diff.x + 1)
-      if (diff.y !== 0) {
-        arrow.frame = 1
-        if (diff.y + diff.x === 0) {
-          arrow.angle -= 90
+      const diff = new Phaser.Point(
+        tiles[index].coordinate.x,
+        tiles[index].coordinate.y
+      )
+      diff.subtract(
+        tiles[index - 1].coordinate.x,
+        tiles[index - 1].coordinate.y
+      )
+
+      if (diff.x === 0) {
+        arrow.angle = -90 * diff.y
+      } else {
+        arrow.angle = 90 * (diff.x + 1)
+        if (diff.y !== 0) {
+          arrow.frame = 1
+          if (diff.y + diff.x === 0) {
+            arrow.angle -= 90
+          }
         }
       }
-    }
+    })
   }
 
   clear () {
     this.group.removeAll(true)
     this.arrows = []
+  }
+
+  chunk (array, size, guard) {
+    var length = array == null ? 0 : array.length
+    if (!length || size < 1) {
+      return []
+    }
+    var index = 0
+    var resIndex = 0
+    var result = Array(Math.ceil(length / size))
+
+    while (index < length) {
+      result[resIndex++] = array.slice(index, (index += size))
+    }
+    return result
   }
 }

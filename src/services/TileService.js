@@ -18,14 +18,23 @@ export default class TileService {
     }
   }
 
-  pickTile (position, lastIndex) {
+  pickTile (position, visited) {
     if (!this.group.getBounds().contains(position.x, position.y)) {
       return
     }
-
+    let last
     const index = this._getIndexFromPosition(position.x, position.y)
     const tile = this.tiles[index]
-    const last = this.tiles[lastIndex]
+
+    if (visited) {
+      last = this.tiles[visited[visited.length - 1]]
+      const last2 = this.tiles[visited[visited.length - 2]]
+      if (last2 && tile.index === last2.index) {
+        last.unpick()
+        visited.pop()
+        return
+      }
+    }
 
     if (!last || this._isValidMatch(tile, last)) {
       if (tile.picked) {

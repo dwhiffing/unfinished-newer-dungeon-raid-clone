@@ -28,11 +28,11 @@ export default class GameService {
   }
 
   onMove ({ position }) {
-    const lastIndex = this.visited[this.visited.length - 1]
-    const tiles = this.tileService.pickTile(position, lastIndex)
+    const tiles = this.tileService.pickTile(position, this.visited)
+    const visitedTiles = this.visited.map(t => this.tileService.tiles[t])
+    this.arrowService.updateArrow(visitedTiles)
     if (tiles) {
       this.visited.push(tiles[0].index)
-      this.arrowService.addArrow(tiles)
     }
   }
 
