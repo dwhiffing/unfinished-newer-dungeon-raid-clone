@@ -10,6 +10,10 @@ export default class MatchService {
     let last
     const tile = this.tileService.pickTile(position)
 
+    if (!tile) {
+      return
+    }
+
     // check for deselect
     if (this.path.length > 0) {
       last = this.tileService.tiles[this.path[this.path.length - 1]]
@@ -43,6 +47,11 @@ export default class MatchService {
     }
     this.path = []
     return this.match
+  }
+
+  clearPath () {
+    this.path = []
+    return this.path
   }
 
   getTilesInMatch () {

@@ -1,26 +1,28 @@
 import Phaser from 'phaser'
 
-const NUM_FRAMES = 5
 const ANIMATION_DURATION = 250
 const GRID_SIZE = 6
 
+// Enemy Sword Shield Potion Gold
+
 export default class extends Phaser.Sprite {
-  constructor ({ game, x, y, size, index }) {
+  constructor ({ game, x, y, size, frame, index }) {
     super(game, x * size, y * size, 'tile')
-    this.size = size
+    this.frame = frame
     this.index = index
+    this.size = size
     this.reset(index)
   }
 
-  reset (index) {
+  reset (index, type) {
     const coords = this._getCoordsFromIndex(index)
     this.position = { x: coords.x * this.size, y: coords.y * this.size }
     this.coordinate = new Phaser.Point(coords.x, coords.y)
-    this.alpha = 0.6
+    this.alpha = 0.7
+    this.frame = type
     this.index = index
     this.visible = true
     this.picked = false
-    this.frame = this._getRandomType()
   }
 
   fall (holes, callback) {
@@ -29,8 +31,8 @@ export default class extends Phaser.Sprite {
     this.coordinate = new Phaser.Point(x, y)
   }
 
-  respawn (index, fallDistance, callback) {
-    this.reset(index % GRID_SIZE)
+  respawn (index, type, fallDistance, callback) {
+    this.reset(index % GRID_SIZE, type)
     this.position = { x: (index % GRID_SIZE) * this.size, y: -1 * this.size }
     this.index = index
 
@@ -47,15 +49,11 @@ export default class extends Phaser.Sprite {
 
   unpick () {
     this.picked = false
-    this.alpha = 0.6
+    this.alpha = 0.7
   }
 
   destroy () {
     this.visible = false
-  }
-
-  _getRandomType () {
-    return Math.floor(Math.random() * NUM_FRAMES)
   }
 
   tween (y, callback) {

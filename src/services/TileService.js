@@ -1,7 +1,8 @@
-import Tile from '../sprites/Tile'
+import Enemy from '../sprites/Enemy'
 
 const TILE_SIZE = 70
 const GRID_SIZE = 6
+const NUM_FRAMES = 5
 
 export default class TileService {
   constructor (gameService) {
@@ -57,8 +58,10 @@ export default class TileService {
     for (let index = this.tiles.length - 1; index >= 0; index--) {
       if (this._holesAtIndex(index) > 0) {
         const tile = removedTiles.pop()
+        const frame = this._getRandomType()
         this.tiles[index] = tile.respawn(
           index,
+          frame,
           this._holesAtIndex(index % GRID_SIZE),
           callback
         )
@@ -67,9 +70,10 @@ export default class TileService {
   }
 
   _createTile () {
-    const tile = new Tile({
+    const tile = new Enemy({
       game: this.game,
       size: TILE_SIZE,
+      frame: this._getRandomType(),
       index: this.tileIndex,
       x: this.tileIndex % GRID_SIZE,
       y: Math.floor(this.tileIndex / GRID_SIZE)
@@ -90,6 +94,10 @@ export default class TileService {
       }
     }
     return result
+  }
+
+  _getRandomType () {
+    return Math.floor(Math.random() * NUM_FRAMES)
   }
 
   _checkAdjacent (p1, p2) {

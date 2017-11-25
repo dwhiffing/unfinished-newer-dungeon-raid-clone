@@ -19,6 +19,8 @@ export default class GameService {
 
     this.allowInput = this.allowInput.bind(this)
     this.game.input.onDown.add(this.onPress, this)
+
+    this.playerService.reset()
   }
 
   onPress ({ position }) {
@@ -43,11 +45,19 @@ export default class GameService {
     if (match) {
       this.playerService.updateResources(match)
     } else {
+      this.matchService.clearPath()
       this.allowInput()
     }
 
     this.arrowService.clear()
     this.tileService.applyGravity(match, this.allowInput)
+
+    const enemies = this.tileService.tiles.filter(t => t.frame === 0)
+    let damage = 0
+    enemies.forEach(e => {
+      damage += e.damage
+    })
+    this.playerService.damage(damage)
   }
 
   allowInput () {
