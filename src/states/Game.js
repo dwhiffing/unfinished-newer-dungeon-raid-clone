@@ -1,7 +1,6 @@
 /* globals __DEV__ */
 import Phaser from 'phaser'
 import GameService from '../services/GameService'
-import UIService from '../services/UIService'
 
 export default class extends Phaser.State {
   init () {}
@@ -9,7 +8,6 @@ export default class extends Phaser.State {
 
   create () {
     this.gameService = new GameService(this)
-    this.UIService = new UIService(this)
   }
 
   render () {

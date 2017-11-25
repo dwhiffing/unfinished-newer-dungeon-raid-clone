@@ -1,18 +1,24 @@
 import ArrowService from './ArrowService'
 import TileService from './TileService'
+import UIService from '../services/UIService'
 
 export default class GameService {
-  constructor () {
+  constructor (state) {
     this.game = window.game
 
     this.nextPick = this.nextPick.bind(this)
 
     this.removedTiles = []
+    this.gold = 0
+    this.armor = 0
+    this.health = 20
 
     this.tileService = new TileService()
     this.arrowService = new ArrowService()
 
     this.game.input.onDown.add(this.onPress, this)
+
+    this.UIService = new UIService(state)
   }
 
   onPress ({ position }) {
@@ -41,6 +47,21 @@ export default class GameService {
     this.game.input.deleteMoveCallback(this.onMove, this)
 
     this.resolveVisited()
+    this.removedTiles.forEach(tile => {
+      if (tile.frame === 4) {
+        this.gold++
+      } else if (tile.frame === 3) {
+        this.health++
+      } else if (tile.frame === 2) {
+        this.armor++
+      }
+    })
+    this.UIService.update({
+      gold: this.gold,
+      armor: this.armor,
+      health: this.health
+    })
+
     this.arrowService.clear()
     this.tileService.applyGravity(this.removedTiles, this.nextPick)
   }
