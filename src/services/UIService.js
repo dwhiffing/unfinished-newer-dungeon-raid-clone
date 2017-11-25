@@ -1,5 +1,6 @@
 export default class UIService {
-  constructor (state) {
+  constructor (gameService) {
+    const state = gameService.state
     const x = state.game.width
     const graphics = state.game.add.graphics(0, 0)
     graphics.beginFill(0x222222)

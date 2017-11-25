@@ -1,32 +1,29 @@
 import ArrowService from './ArrowService'
 import TileService from './TileService'
+import PlayerService from './PlayerService'
+import MatchService from './MatchService'
 import UIService from '../services/UIService'
 
 export default class GameService {
   constructor (state) {
     this.game = window.game
-
-    this.nextPick = this.nextPick.bind(this)
-
     this.removedTiles = []
-    this.gold = 0
-    this.armor = 0
-    this.health = 20
+    this.visited = []
+    this.state = state
 
-    this.tileService = new TileService()
-    this.arrowService = new ArrowService()
+    this.tileService = new TileService(this)
+    this.matchService = new MatchService(this)
+    this.arrowService = new ArrowService(this)
+    this.uiService = new UIService(this)
+    this.playerService = new PlayerService(this)
 
+    this.allowInput = this.allowInput.bind(this)
     this.game.input.onDown.add(this.onPress, this)
-
-    this.UIService = new UIService(state)
   }
 
   onPress ({ position }) {
-    this.visited = []
-    const tile = this.tileService.pickTile(position)
-    if (tile) {
-      this.visited.push(tile.index)
-
+    const tileSelected = this.matchService.selectTile(position)
+    if (tileSelected) {
       this.game.input.onDown.remove(this.onPress, this)
       this.game.input.onUp.add(this.onRelease, this)
       this.game.input.addMoveCallback(this.onMove, this)
@@ -34,51 +31,26 @@ export default class GameService {
   }
 
   onMove ({ position }) {
-    const tiles = this.tileService.pickTile(position, this.visited)
-    const visitedTiles = this.visited.map(t => this.tileService.tiles[t])
-    this.arrowService.updateArrow(visitedTiles)
-    if (tiles) {
-      this.visited.push(tiles[0].index)
-    }
+    this.matchService.selectTile(position)
+    this.arrowService.updateArrow(this.matchService.getTilesInMatch())
   }
 
   onRelease () {
     this.game.input.onUp.remove(this.onRelease, this)
     this.game.input.deleteMoveCallback(this.onMove, this)
 
-    this.resolveVisited()
-    this.removedTiles.forEach(tile => {
-      if (tile.frame === 4) {
-        this.gold++
-      } else if (tile.frame === 3) {
-        this.health++
-      } else if (tile.frame === 2) {
-        this.armor++
-      }
-    })
-    this.UIService.update({
-      gold: this.gold,
-      armor: this.armor,
-      health: this.health
-    })
+    const match = this.matchService.resolveMatch()
+    if (match) {
+      this.playerService.updateResources(match)
+    } else {
+      this.allowInput()
+    }
 
     this.arrowService.clear()
-    this.tileService.applyGravity(this.removedTiles, this.nextPick)
+    this.tileService.applyGravity(match, this.allowInput)
   }
 
-  resolveVisited () {
-    for (let i = 0; i < this.visited.length; i++) {
-      if (this.visited.length > 2) {
-        const tile = this.tileService.removeTile(this.visited[i])
-        this.removedTiles.push(tile)
-      } else {
-        this.tileService.clearPick()
-        this.nextPick()
-      }
-    }
-  }
-
-  nextPick () {
+  allowInput () {
     if (!this.game.input.onDown.has(this.onPress, this)) {
       this.game.input.onDown.add(this.onPress, this)
     }

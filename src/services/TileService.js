@@ -4,7 +4,7 @@ const TILE_SIZE = 70
 const GRID_SIZE = 6
 
 export default class TileService {
-  constructor () {
+  constructor (gameService) {
     this.game = window.game
 
     this.tiles = []
@@ -19,30 +19,16 @@ export default class TileService {
   }
 
   pickTile (position, visited) {
-    if (!this.group.getBounds().contains(position.x, position.y)) {
-      return
+    if (this.group.getBounds().contains(position.x, position.y)) {
+      const index =
+        Math.floor((position.x - this.group.x) / TILE_SIZE) +
+        Math.floor((position.y - this.group.y) / TILE_SIZE) * GRID_SIZE
+      return this.tiles[index]
     }
-    let last
-    const index = this._getIndexFromPosition(position.x, position.y)
-    const tile = this.tiles[index]
+  }
 
-    if (visited) {
-      last = this.tiles[visited[visited.length - 1]]
-      const last2 = this.tiles[visited[visited.length - 2]]
-      if (last2 && tile.index === last2.index) {
-        last.unpick()
-        visited.pop()
-        return
-      }
-    }
-
-    if (!last || this._isValidMatch(tile, last)) {
-      if (tile.picked) {
-        return
-      }
-      tile.pick()
-      return last ? [tile, last] : tile
-    }
+  clearPick () {
+    this.tiles.forEach(t => t.unpick())
   }
 
   removeTile (index) {
@@ -50,10 +36,6 @@ export default class TileService {
     tile.destroy()
     this.tiles[index] = null
     return tile
-  }
-
-  clearPick () {
-    this.tiles.forEach(t => t.unpick())
   }
 
   applyGravity (removedTiles, callback) {
@@ -75,9 +57,11 @@ export default class TileService {
     for (let index = this.tiles.length - 1; index >= 0; index--) {
       if (this._holesAtIndex(index) > 0) {
         const tile = removedTiles.pop()
-        const fallDistance = this._holesAtIndex(index % GRID_SIZE)
-        tile.respawn(index, fallDistance, callback)
-        this.tiles[index] = tile
+        this.tiles[index] = tile.respawn(
+          index,
+          this._holesAtIndex(index % GRID_SIZE),
+          callback
+        )
       }
     }
   }
@@ -98,13 +82,6 @@ export default class TileService {
     return tile
   }
 
-  _getIndexFromPosition (x, y) {
-    return (
-      Math.floor((x - this.group.x) / TILE_SIZE) +
-      Math.floor((y - this.group.y) / TILE_SIZE) * GRID_SIZE
-    )
-  }
-
   _holesAtIndex (_index) {
     let result = 0
     for (let index = _index; index < this.tiles.length; index += GRID_SIZE) {
@@ -119,11 +96,8 @@ export default class TileService {
     return Math.abs(p1.x - p2.x) <= 1 && Math.abs(p1.y - p2.y) <= 1
   }
 
-  _isValidMatch (tile, last) {
-    return (
-      this._checkAdjacent(tile.coordinate, last.coordinate) &&
-      tile.frame === last.frame
-    )
+  _logTile (t) {
+    return t ? `${t.index}` : 'nil'
   }
 
   _logTiles (name, force) {
@@ -135,9 +109,5 @@ export default class TileService {
     console.log(this.tiles.map(this._logTile).slice(24, 30))
     console.log(this.tiles.map(this._logTile).slice(30, 36))
     console.log('=====================', name)
-  }
-
-  _logTile (t) {
-    return t ? `${t.index}` : 'nil'
   }
 }

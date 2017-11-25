@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
 
 export default class ArrowService {
-  constructor () {
+  constructor (gameService) {
     this.game = window.game
     this.group = this.game.add.group()
     this.group.x = 35

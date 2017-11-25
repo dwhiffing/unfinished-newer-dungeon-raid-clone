@@ -37,6 +37,7 @@ export default class extends Phaser.Sprite {
     const { x, y } = this._getCoordsFromIndex(index)
     this.coordinate = new Phaser.Point(x, y)
     this.tween(fallDistance, callback)
+    return this
   }
 
   pick () {
