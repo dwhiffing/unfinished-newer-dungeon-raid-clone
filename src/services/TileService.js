@@ -56,6 +56,10 @@ export default class TileService {
 
   _placeNewTiles (match, callback) {
     match = match.filter(t => t.frame !== 0 || t.hp <= 0)
+    if (match.length === 0) {
+      callback()
+      return
+    }
     for (let index = this.tiles.length - 1; index >= 0; index--) {
       if (this._holesAtIndex(index) > 0) {
         const tile = match.pop()
