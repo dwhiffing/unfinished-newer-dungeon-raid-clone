@@ -3,70 +3,54 @@ import Tile from './Tile'
 export default class extends Tile {
   constructor ({ game, x, y, size, index, frame }) {
     super({ game, x, y, size, index, frame })
-    this.hp = 10
-    this.damage = 1
-    this.armor = 5
 
-    const hpText = game.add.text(0, 0, this.hp.toString())
-    this.hpText = hpText
-    hpText.padding.set(10, 16)
-    hpText.fontSize = 14
-    hpText.fill = '#ff0000'
-    hpText.smoothed = false
-    hpText.anchor.setTo(0.5)
-    this.hpText.x = 65
-    this.hpText.y = 70
-    this.hpText.visible = this.frame === 0
-    this.addChild(this.hpText)
-
-    const damageText = game.add.text(0, 0, this.damage.toString())
-    this.damageText = damageText
-    damageText.padding.set(10, 16)
-    damageText.fontSize = 14
-    damageText.fill = '#ffffff'
-    damageText.smoothed = false
-    damageText.anchor.setTo(0.5)
-    this.damageText.x = 65
-    this.damageText.y = 20
-    this.damageText.visible = this.frame === 0
-    this.addChild(this.damageText)
-
-    const armorText = game.add.text(0, 0, this.armor.toString())
-    this.armorText = armorText
-    armorText.padding.set(10, 16)
-    armorText.fontSize = 14
-    armorText.fill = '#eeeeee'
-    armorText.smoothed = false
-    armorText.anchor.setTo(0.5)
-    this.armorText.visible = this.frame === 0
-    this.armorText.x = 65
-    this.armorText.y = 35
-    this.addChild(this.armorText)
+    this.hpText = this._initText(game, 65, 70, `${this.hp}`, '#ff0000')
+    this.damageText = this._initText(game, 65, 20, `${this.damage}`, '#ffffff')
+    this.armorText = this._initText(game, 65, 35, `${this.armor}`, '#eeeeee')
+    this.texts = [this.hpText, this.damageText, this.armorText]
+    this.level = 1
   }
 
   reset (index, type) {
     super.reset(index, type)
+
+    this.level += 0.2
     if (type === 0) {
-      this.hp = 15
-      this.armor = 5
-      this.damageText.visible = true
-      this.armorText.visible = true
-      this.hpText.visible = true
+      this._setStats(Math.floor(this.level))
       this.updateUI()
     } else {
-      this.damageText.visible = false
-      this.armorText.visible = false
-      this.hpText.visible = false
+      this._toggleStats(false)
     }
   }
 
   updateUI () {
-    this.armorText.text = this.armor.toString()
-    this.damageText.text = this.damage.toString()
-    this.hpText.text = this.hp.toString()
+    this._toggleStats(true)
+    this.armorText.text = `${this.armor}`
+    this.damageText.text = `${this.damage}`
+    this.hpText.text = `${this.hp}`
   }
 
-  destroy () {
-    super.destroy()
+  _toggleStats (value) {
+    this.texts.forEach(t => {
+      t.visible = value
+    })
+  }
+
+  _setStats (level) {
+    this.damage = level
+    this.armor = level * 2
+    this.hp = level * 4
+  }
+
+  _initText (game, x, y, string, fill) {
+    const text = game.add.text(x, y, string)
+    text.padding.set(10, 16)
+    text.fontSize = 14
+    text.smoothed = false
+    text.anchor.setTo(0.5)
+    text.fill = fill
+    text.visible = this.frame === 0
+    this.addChild(text)
+    return text
   }
 }
