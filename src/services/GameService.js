@@ -41,23 +41,19 @@ export default class GameService {
     this.game.input.onUp.remove(this.onRelease, this)
     this.game.input.deleteMoveCallback(this.onMove, this)
 
+    this.arrowService.clear()
+
     const match = this.matchService.resolveMatch()
     if (match) {
       this.playerService.updateResources(match)
+
+      const enemies = this.tileService.tiles.filter(t => t && t.frame === 0)
+      this.tileService.applyGravity(match, this.allowInput)
+      this.playerService.damage(enemies)
     } else {
       this.matchService.clearPath()
       this.allowInput()
     }
-
-    this.arrowService.clear()
-    this.tileService.applyGravity(match, this.allowInput)
-
-    const enemies = this.tileService.tiles.filter(t => t.frame === 0)
-    let damage = 0
-    enemies.forEach(e => {
-      damage += e.damage
-    })
-    this.playerService.damage(damage)
   }
 
   allowInput () {

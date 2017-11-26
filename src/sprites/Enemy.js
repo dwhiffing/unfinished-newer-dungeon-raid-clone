@@ -50,6 +50,10 @@ export default class extends Tile {
       this.damageText.visible = true
       this.armorText.visible = true
       this.hpText.visible = true
+    } else {
+      this.damageText.visible = false
+      this.armorText.visible = false
+      this.hpText.visible = false
     }
   }
 

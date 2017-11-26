@@ -11,7 +11,6 @@ export default class extends Phaser.Sprite {
     this.frame = frame
     this.index = index
     this.size = size
-    this.reset(index)
   }
 
   reset (index, type) {

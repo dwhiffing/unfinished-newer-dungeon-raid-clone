@@ -70,15 +70,20 @@ export default class TileService {
   }
 
   _createTile () {
+    let frame = this._getRandomType() + 2
+    if (frame > NUM_FRAMES - 1) {
+      frame = NUM_FRAMES - 1
+    }
     const tile = new Enemy({
       game: this.game,
       size: TILE_SIZE,
-      frame: this._getRandomType(),
+      frame: frame,
       index: this.tileIndex,
       x: this.tileIndex % GRID_SIZE,
       y: Math.floor(this.tileIndex / GRID_SIZE)
     })
 
+    tile.reset(this.tileIndex, frame)
     this.tiles[this.tileIndex] = tile
     this.group.add(tile)
     this.tileIndex += 1

@@ -61,7 +61,7 @@ export default class MatchService {
   _isValidMatch (tile, last) {
     return (
       this.tileService._checkAdjacent(tile.coordinate, last.coordinate) &&
-      tile.frame === last.frame
+      (tile.frame === last.frame || (tile.frame < 2 && last.frame < 2))
     )
   }
 }
