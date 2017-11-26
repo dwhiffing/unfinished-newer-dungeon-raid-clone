@@ -30,6 +30,10 @@ export default class MatchService {
         return
       }
       tile.pick()
+      if (!last) {
+        this.path = []
+        this.match = []
+      }
       this.path.push(tile.index)
       return last ? [tile, last] : tile
     }
@@ -42,15 +46,17 @@ export default class MatchService {
     }
 
     for (let i = 0; i < this.path.length; i++) {
-      const tile = this.tileService.removeTile(this.path[i])
+      const tile = this.tileService.tiles[this.path[i]]
       this.match.push(tile)
     }
+
     this.path = []
     return this.match
   }
 
   clearPath () {
     this.path = []
+    this.match = []
     return this.path
   }
 

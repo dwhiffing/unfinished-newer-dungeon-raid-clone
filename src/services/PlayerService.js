@@ -8,6 +8,7 @@ export default class PlayerService {
   constructor (gameService) {
     this.game = window.game
     this.uiService = gameService.uiService
+    this.tileService = gameService.tileService
   }
 
   get experience () {
@@ -47,7 +48,6 @@ export default class PlayerService {
 
   set health (newHealth) {
     if (newHealth > this._health) {
-      console.log('healing player for', newHealth - this._health)
       this._health = newHealth
       if (this._health > this.maxHealth) {
         this._health = this.maxHealth
@@ -63,7 +63,6 @@ export default class PlayerService {
     }
 
     if (incomingDamage > 0) {
-      console.log('damaging player for', incomingDamage)
       this._health -= incomingDamage
       if (this._health <= 0) {
         console.log('Game over!')
@@ -85,10 +84,8 @@ export default class PlayerService {
       let incomingArmor = newArmor - this._armor
       let armor = this._armor
       this._armor += incomingArmor
-      console.log('healing player armor', armor, incomingArmor, this._armor)
       incomingArmor -= this.maxArmor - armor
       if (incomingArmor > 0) {
-        console.log('upgrading player for', incomingArmor)
         this.upgrade += incomingArmor
         this._armor = this.maxArmor
       } else {
@@ -98,7 +95,6 @@ export default class PlayerService {
     }
 
     let incomingDamage = this._armor - newArmor
-    console.log('damaging armor for', incomingDamage)
     this._armor -= incomingDamage
     incomingDamage = 0
 
@@ -165,17 +161,58 @@ export default class PlayerService {
   }
 
   updateResources (tiles) {
+    let gold = 0
+    let potion = 0
+    let armor = 0
+    let experience = 0
+    let sword = 0
+
     tiles.forEach(tile => {
+      if (tile.frame === 0) {
+        return
+      }
+      this.tileService.removeTile(tile.index)
       if (tile.frame === 4) {
-        this.gold++
+        gold++
       } else if (tile.frame === 3) {
-        this.health++
+        potion++
       } else if (tile.frame === 2) {
-        this.armor++
-      } else if (tile.frame === 0) {
-        this.experience++
+        armor++
+      } else if (tile.frame === 1) {
+        sword++
       }
     })
+
+    tiles.forEach(tile => {
+      if (tile.frame === 0) {
+        tile.unpick()
+        let totalDamage = this.baseDamage + this.weaponDamage * sword
+
+        if (tile.armor - totalDamage < 0) {
+          totalDamage -= tile.armor
+          tile.armor = 0
+        } else {
+          tile.armor -= totalDamage
+          return
+        }
+
+        if (totalDamage > 0) {
+          tile.hp -= totalDamage
+
+          if (tile.hp <= 0) {
+            experience++
+            this.tileService.removeTile(tile.index)
+          }
+        }
+
+        tile.updateUI()
+      }
+    })
+
+    this.gold += gold
+    this.health += potion
+    this.armor += armor
+    this.experience += experience
 
     this.updateUI()
   }

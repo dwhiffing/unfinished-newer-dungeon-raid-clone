@@ -39,7 +39,7 @@ export default class TileService {
     return tile
   }
 
-  applyGravity (removedTiles, callback) {
+  applyGravity (match, callback) {
     for (let index = this.tiles.length - 1; index >= 0; index--) {
       const holes = this._holesAtIndex(index + GRID_SIZE)
       const tile = this.tiles[index]
@@ -51,13 +51,14 @@ export default class TileService {
       }
     }
 
-    this._placeNewTiles(removedTiles, callback)
+    this._placeNewTiles(match, callback)
   }
 
-  _placeNewTiles (removedTiles, callback) {
+  _placeNewTiles (match, callback) {
+    match = match.filter(t => t.frame !== 0 || t.hp <= 0)
     for (let index = this.tiles.length - 1; index >= 0; index--) {
       if (this._holesAtIndex(index) > 0) {
-        const tile = removedTiles.pop()
+        const tile = match.pop()
         const frame = this._getRandomType()
         this.tiles[index] = tile.respawn(
           index,
@@ -70,7 +71,7 @@ export default class TileService {
   }
 
   _createTile () {
-    let frame = this._getRandomType() + 2
+    let frame = this._getRandomType() + 1
     if (frame > NUM_FRAMES - 1) {
       frame = NUM_FRAMES - 1
     }

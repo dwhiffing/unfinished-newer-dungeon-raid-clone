@@ -3,9 +3,9 @@ import Tile from './Tile'
 export default class extends Tile {
   constructor ({ game, x, y, size, index, frame }) {
     super({ game, x, y, size, index, frame })
-    this.hp = 4
+    this.hp = 10
     this.damage = 1
-    this.armor = 1
+    this.armor = 5
 
     const hpText = game.add.text(0, 0, this.hp.toString())
     this.hpText = hpText
@@ -47,14 +47,23 @@ export default class extends Tile {
   reset (index, type) {
     super.reset(index, type)
     if (type === 0) {
+      this.hp = 15
+      this.armor = 5
       this.damageText.visible = true
       this.armorText.visible = true
       this.hpText.visible = true
+      this.updateUI()
     } else {
       this.damageText.visible = false
       this.armorText.visible = false
       this.hpText.visible = false
     }
+  }
+
+  updateUI () {
+    this.armorText.text = this.armor.toString()
+    this.damageText.text = this.damage.toString()
+    this.hpText.text = this.hp.toString()
   }
 
   destroy () {
