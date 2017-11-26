@@ -21,10 +21,16 @@ export default class TileService {
 
   pickTile (position) {
     if (this.group.getBounds().contains(position.x, position.y)) {
-      const index =
-        Math.floor((position.x - this.group.x) / TILE_SIZE) +
-        Math.floor((position.y - this.group.y) / TILE_SIZE) * GRID_SIZE
-      return this.tiles[index]
+      const _x = (position.x - this.group.x) / TILE_SIZE
+      const _y = (position.y - this.group.y) / TILE_SIZE
+      const dx = _x - Math.floor(Math.abs(_x))
+      const dy = _y - Math.floor(Math.abs(_y))
+      if (dx < 0.8 && dy < 0.8) {
+        const x = Math.floor(_x)
+        const y = Math.floor(_y)
+        const index = x + y * GRID_SIZE
+        return this.tiles[index]
+      }
     }
   }
 

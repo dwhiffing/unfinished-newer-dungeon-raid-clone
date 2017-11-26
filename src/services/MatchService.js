@@ -33,7 +33,6 @@ export default class MatchService {
       if (!last) {
         this.path = []
         this.match = []
-      } else {
         this._highlightMatchingTiles(tile.frame)
       }
       this.path.push(tile.index)
