@@ -19,7 +19,7 @@ export default class TileService {
     }
   }
 
-  pickTile (position, visited) {
+  pickTile (position) {
     if (this.group.getBounds().contains(position.x, position.y)) {
       const index =
         Math.floor((position.x - this.group.x) / TILE_SIZE) +

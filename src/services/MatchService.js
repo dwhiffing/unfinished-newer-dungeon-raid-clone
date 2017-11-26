@@ -33,10 +33,24 @@ export default class MatchService {
       if (!last) {
         this.path = []
         this.match = []
+      } else {
+        this._highlightMatchingTiles(tile.frame)
       }
       this.path.push(tile.index)
       return last ? [tile, last] : tile
     }
+  }
+
+  _highlightMatchingTiles (frame) {
+    this.tileService.tiles.forEach(t => {
+      if (frame === 0 || frame === 1) {
+        if (t.frame > 1) {
+          t.alpha = 0.5
+        }
+      } else if (t.frame !== frame) {
+        t.alpha = 0.5
+      }
+    })
   }
 
   resolveMatch () {
@@ -50,13 +64,19 @@ export default class MatchService {
       this.match.push(tile)
     }
 
-    this.path = []
-    return this.match
+    const match = this.match.concat([])
+    this.clearPath()
+
+    return match
   }
 
   clearPath () {
     this.path = []
     this.match = []
+    this.tileService.tiles.forEach(t => {
+      t.alpha = 1
+    })
+
     return this.path
   }
 

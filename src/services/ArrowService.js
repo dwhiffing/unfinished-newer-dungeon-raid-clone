@@ -6,7 +6,7 @@ export default class ArrowService {
     this.group = this.game.add.group()
     this.group.x = 33
     this.group.y = 157
-    this.group.alpha = 0.8
+    this.group.alpha = 0.9
     this.arrows = []
     this.updateArrow = this.updateArrow.bind(this)
   }
