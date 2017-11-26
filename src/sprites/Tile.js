@@ -17,7 +17,6 @@ export default class extends Phaser.Sprite {
     const coords = this._getCoordsFromIndex(index)
     this.position = { x: coords.x * this.size, y: coords.y * this.size }
     this.coordinate = new Phaser.Point(coords.x, coords.y)
-    this.alpha = 0.7
     this.frame = type
     this.index = index
     this.visible = true
@@ -43,12 +42,10 @@ export default class extends Phaser.Sprite {
 
   pick () {
     this.picked = true
-    this.alpha = 1
   }
 
   unpick () {
     this.picked = false
-    this.alpha = 0.7
   }
 
   destroy () {

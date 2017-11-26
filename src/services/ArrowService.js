@@ -4,8 +4,9 @@ export default class ArrowService {
   constructor (gameService) {
     this.game = window.game
     this.group = this.game.add.group()
-    this.group.x = 35
-    this.group.y = 160
+    this.group.x = 33
+    this.group.y = 157
+    this.group.alpha = 0.8
     this.arrows = []
     this.updateArrow = this.updateArrow.bind(this)
   }
