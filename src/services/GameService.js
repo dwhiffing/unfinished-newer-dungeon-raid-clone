@@ -13,7 +13,10 @@ export default class GameService {
     this.state = state
 
     this.uiService = new UIService(this)
+    this.uiService.drawFooter()
     this.tileService = new TileService(this)
+    this.uiService.drawHeader()
+
     this.matchService = new MatchService(this)
     this.arrowService = new ArrowService(this)
     this.damageService = new DamageService(this)

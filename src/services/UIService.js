@@ -1,21 +1,29 @@
 export default class UIService {
   constructor (gameService) {
     this.state = gameService.state
+  }
+
+  drawHeader () {
+    const x = this.state.game.width
+    const header = this.state.game.add.graphics(0, 0)
+    header.beginFill(0x222222)
+    header.drawRect(0, 0, x, 120)
+    header.beginFill(0x888888)
+    header.drawRect(0, 115, x, 5)
+
+    this._initText(x / 2, 60, 'Dungeon Raid', '#77BFA3', 40)
+  }
+
+  drawFooter () {
     const x = this.state.game.width
     const y = this.state.game.height
 
-    const graphics = this.state.game.add.graphics(0, 0)
-    graphics.beginFill(0x222222)
-    graphics.drawRect(0, 0, x, 120)
-    graphics.drawRect(0, y - 115, x, y)
-
-    graphics.beginFill(0x888888)
-    graphics.drawRect(0, 115, x, 5)
-    graphics.drawRect(0, y - 115, x, 5)
-    graphics.endFill()
-
-    const banner = this._initText(x / 2, 60, 'Dungeon Raid', '#77BFA3', 40)
-    banner.font = 'Bangers'
+    const footer = this.state.game.add.graphics(0, 0)
+    footer.beginFill(0x222222)
+    footer.drawRect(0, y - 115, x, y)
+    footer.beginFill(0x888888)
+    footer.drawRect(0, y - 115, x, 5)
+    footer.endFill()
 
     const gold = this._initText(70, y - 40, '0/50', '#ffff00', 32)
     const health = this._initText(x - 70, y - 40, '50/50', '#ff0000', 32)

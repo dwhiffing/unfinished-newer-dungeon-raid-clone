@@ -1,6 +1,6 @@
 import Phaser from 'phaser'
 
-const ANIMATION_DURATION = 250
+const ANIMATION_DURATION = 180
 const GRID_SIZE = 6
 
 // Enemy Sword Shield Potion Gold
@@ -28,8 +28,9 @@ export default class extends Phaser.Sprite {
     this.picked = false
   }
 
-  fall (holes, callback) {
-    this.tween(holes, callback)
+  fall (fallDistance, callback) {
+    const duration = ANIMATION_DURATION * fallDistance
+    this.tween(fallDistance, callback, duration)
     const { x, y } = this._getCoordsFromIndex(this.index)
     this.coordinate = new Phaser.Point(x, y)
   }
@@ -42,12 +43,14 @@ export default class extends Phaser.Sprite {
       x: (index % GRID_SIZE) * this.size + 30,
       y: -othY * this.size + 30
     }
-
-    this.index = index
-
     const { x, y } = this._getCoordsFromIndex(index)
     this.coordinate = new Phaser.Point(x, y)
-    this.tween(fallDistance, callback)
+    this.index = index
+
+    const duration =
+      ANIMATION_DURATION * fallDistance * (Math.abs(this.y - 1000) / 1000)
+
+    this.tween(fallDistance, callback, duration)
     return this
   }
 
@@ -72,8 +75,7 @@ export default class extends Phaser.Sprite {
     })
   }
 
-  tween (y, callback) {
-    const duration = ANIMATION_DURATION * y
+  tween (y, callback, duration) {
     const tween = this.game.add
       .tween(this)
       .to(
