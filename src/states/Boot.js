@@ -1,5 +1,4 @@
 import Phaser from 'phaser'
-import WebFont from 'webfontloader'
 
 export default class extends Phaser.State {
   init () {
@@ -9,12 +8,7 @@ export default class extends Phaser.State {
   }
 
   preload () {
-    WebFont.load({
-      google: {
-        families: ['Bangers']
-      },
-      active: this.fontsLoaded
-    })
+    // WebFont.load({ google: { families: [] }, active: this.fontsLoaded })
 
     const text = this.add.text(
       this.world.centerX,
@@ -29,9 +23,9 @@ export default class extends Phaser.State {
   }
 
   render () {
-    if (this.fontsReady) {
-      this.state.start('Splash')
-    }
+    // if (this.fontsReady) {
+    this.state.start('Splash')
+    // }
   }
 
   fontsLoaded () {

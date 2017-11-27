@@ -10,7 +10,6 @@ export default class DamageService {
     this.graphics.alpha = 0.5
 
     this.banner = this._initText(x / 2, y / 2, '1 DMG', '#ff0000', 40)
-    this.banner.font = 'Bangers'
 
     this.clear()
   }
