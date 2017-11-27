@@ -12,10 +12,10 @@ export default class GameService {
     this.visited = []
     this.state = state
 
+    this.uiService = new UIService(this)
     this.tileService = new TileService(this)
     this.matchService = new MatchService(this)
     this.arrowService = new ArrowService(this)
-    this.uiService = new UIService(this)
     this.damageService = new DamageService(this)
     this.playerService = new PlayerService(this)
 

@@ -8,15 +8,17 @@ export default class TileService {
   constructor (gameService) {
     this.game = window.game
 
+    this.allTiles = []
     this.tiles = []
     this.group = this.game.add.group()
     this.group.x = 0
     this.group.y = 125
-    this.tileIndex = 0
 
-    while (this.tiles.length < GRID_SIZE * GRID_SIZE) {
+    while (this.allTiles.length < 100) {
       this._createTile()
     }
+
+    this._setupGrid()
   }
 
   pickTile (position) {
@@ -60,41 +62,43 @@ export default class TileService {
     this._placeNewTiles(match)
   }
 
-  _placeNewTiles (match) {
-    match = match.filter(t => t.frame !== 0 || t.hp <= 0)
-    for (let index = this.tiles.length - 1; index >= 0; index--) {
-      if (this._holesAtIndex(index) > 0) {
-        const tile = match.pop()
-        const frame = this._getRandomType()
-        this.tiles[index] = tile.respawn(
-          index,
-          frame,
-          this._holesAtIndex(index % GRID_SIZE)
-        )
+  _placeNewTiles () {
+    for (let column = 0; column < GRID_SIZE; column++) {
+      const holesInColumn = this._holesAtIndex(column)
+      for (let row = GRID_SIZE - 1; row >= 0; row--) {
+        const index = row * GRID_SIZE + column
+        if (this._holesAtIndex(index) > 0) {
+          const tile = this.allTiles.find(t => !t.visible)
+          const frame = this._getRandomType()
+          this.tiles[index] = tile.respawn(index, frame, holesInColumn)
+        }
       }
     }
   }
 
   _createTile () {
-    let frame = this._getRandomType() + 1
-    if (frame > NUM_FRAMES - 1) {
-      frame = NUM_FRAMES - 1
-    }
     const tile = new Enemy({
       game: this.game,
-      size: TILE_SIZE,
-      frame: frame,
-      index: this.tileIndex,
-      x: this.tileIndex % GRID_SIZE,
-      y: Math.floor(this.tileIndex / GRID_SIZE)
+      size: TILE_SIZE
     })
 
-    tile.reset(this.tileIndex, frame)
-    this.tiles[this.tileIndex] = tile
+    this.allTiles.push(tile)
     this.group.add(tile)
-    this.tileIndex += 1
 
     return tile
+  }
+
+  _setupGrid () {
+    this.tiles = []
+
+    this.allTiles.slice(0, GRID_SIZE * GRID_SIZE).forEach((tile, index) => {
+      let frame = this._getRandomType() + 1
+      if (frame > NUM_FRAMES - 1) {
+        frame = NUM_FRAMES - 1
+      }
+      tile.reset(index, frame)
+      this.tiles[index] = tile
+    })
   }
 
   _holesAtIndex (_index) {

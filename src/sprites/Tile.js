@@ -6,17 +6,22 @@ const GRID_SIZE = 6
 // Enemy Sword Shield Potion Gold
 
 export default class extends Phaser.Sprite {
-  constructor ({ game, x, y, size, frame, index }) {
-    super(game, x * size, y * size, 'tile')
-    this.frame = frame
-    this.index = index
+  constructor ({ game, size }) {
+    super(game, 0, 0, 'tile')
     this.size = size
+    this.anchor.setTo(0.5)
+    this.visible = false
   }
 
   reset (index, type) {
     const coords = this._getCoordsFromIndex(index)
-    this.position = { x: coords.x * this.size, y: coords.y * this.size }
+    this.position = {
+      x: coords.x * this.size + 30,
+      y: coords.y * this.size + 30
+    }
     this.coordinate = new Phaser.Point(coords.x, coords.y)
+    this.scale.setTo(1)
+    this.angle = 0
     this.frame = type
     this.index = index
     this.visible = true
@@ -30,8 +35,14 @@ export default class extends Phaser.Sprite {
   }
 
   respawn (index, type, fallDistance, callback) {
+    const row = Math.floor(index / GRID_SIZE)
+    const othY = Math.abs(fallDistance - row)
     this.reset(index % GRID_SIZE, type)
-    this.position = { x: (index % GRID_SIZE) * this.size, y: -1 * this.size }
+    this.position = {
+      x: (index % GRID_SIZE) * this.size + 30,
+      y: -othY * this.size + 30
+    }
+
     this.index = index
 
     const { x, y } = this._getCoordsFromIndex(index)
@@ -49,14 +60,20 @@ export default class extends Phaser.Sprite {
   }
 
   destroy () {
-    this.visible = false
+    let x = this.game.width / 2
+    if (this.frame === 4) {
+      x = 100
+    }
+    if (this.frame === 3) {
+      x = this.game.width - 100
+    }
+    this.matchTween(x, this.game.height - 170, () => {
+      this.visible = false
+    })
   }
 
   tween (y, callback) {
-    // This makes the tiles fall at a consisten speed, but would need to fix callback for next move
-    // When some times are falling slower than others, input is allowed too early
-    // const duration = ANIMATION_DURATION * y
-    const duration = ANIMATION_DURATION
+    const duration = ANIMATION_DURATION * y
     const tween = this.game.add
       .tween(this)
       .to(
@@ -67,6 +84,20 @@ export default class extends Phaser.Sprite {
       )
 
     callback && tween.onComplete.add(callback, this)
+    return tween
+  }
+
+  matchTween (x, y, callback) {
+    const duration = 1000
+    const tween = this.game.add
+      .tween(this)
+      .to({ x, y }, duration, Phaser.Easing.Linear.None, true)
+    callback && tween.onComplete.add(callback, this)
+
+    this.game.add
+      .tween(this.scale)
+      .to({ x: 0.2, y: 0.2 }, duration, Phaser.Easing.Linear.None, true)
+
     return tween
   }
 
