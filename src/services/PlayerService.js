@@ -5,10 +5,8 @@
 // Wizard - Low damage to all enemies
 
 export default class PlayerService {
-  constructor (gameService) {
+  constructor () {
     this.game = window.game
-    this.uiService = gameService.uiService
-    this.tileService = gameService.tileService
   }
 
   get experience () {
@@ -135,7 +133,10 @@ export default class PlayerService {
     return this.items[0]
   }
 
-  reset () {
+  init (gameService) {
+    this.uiService = gameService.uiService
+    this.tileService = gameService.tileService
+
     this.strength = 1
     this.level = 1
     this.vitality = 1
@@ -148,15 +149,6 @@ export default class PlayerService {
     this._armor = this.maxArmor
     this._upgrade = 0
     this._gold = 0
-  }
-
-  damage (enemies) {
-    let amount = 0
-    enemies.forEach(e => {
-      amount += e.damage
-    })
-    this.health -= amount
-    return amount
   }
 
   updateResources (tiles) {

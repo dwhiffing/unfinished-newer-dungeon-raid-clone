@@ -1,14 +1,17 @@
 import Phaser from 'phaser'
 
 export default class ArrowService {
-  constructor (gameService) {
+  constructor () {
     this.game = window.game
     this.group = this.game.add.group()
     this.group.x = 0
     this.group.y = 125
+    this.updateArrow = this.updateArrow.bind(this)
+  }
+
+  init (gameService) {
     this.group.alpha = 0.9
     this.arrows = []
-    this.updateArrow = this.updateArrow.bind(this)
   }
 
   updateArrow (tiles) {

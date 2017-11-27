@@ -5,18 +5,20 @@ const GRID_SIZE = 6
 const NUM_FRAMES = 5
 
 export default class TileService {
-  constructor (gameService) {
+  constructor () {
     this.game = window.game
-
-    this.allTiles = []
-    this.tiles = []
     this.group = this.game.add.group()
     this.group.x = 0
     this.group.y = 125
+    this.allTiles = []
 
     while (this.allTiles.length < 100) {
       this._createTile()
     }
+  }
+
+  init (gameService) {
+    this.tiles = []
 
     this._setupGrid()
   }

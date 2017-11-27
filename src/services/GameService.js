@@ -12,21 +12,24 @@ export default class GameService {
     this.visited = []
     this.state = state
 
-    this.uiService = new UIService(this)
-    this.uiService.drawFooter()
-    this.tileService = new TileService(this)
-    this.uiService.drawHeader()
-
-    this.matchService = new MatchService(this)
-    this.arrowService = new ArrowService(this)
-    this.damageService = new DamageService(this)
-    this.playerService = new PlayerService(this)
-
     this.allowInput = this.allowInput.bind(this)
     this.game.input.onDown.add(this.onPress, this)
 
-    this.playerService.reset()
-    this.updateUI()
+    this.uiService = new UIService()
+
+    this.tileService = new TileService()
+    this.matchService = new MatchService()
+    this.playerService = new PlayerService()
+    this.arrowService = new ArrowService()
+    this.damageService = new DamageService()
+
+    this.tileService.init(this)
+    this.matchService.init(this)
+    this.playerService.init(this)
+    this.arrowService.init(this)
+    this.damageService.init(this)
+
+    this.uiService.init(this)
   }
 
   onPress ({ position }) {
@@ -52,7 +55,7 @@ export default class GameService {
     const match = this.matchService.resolveMatch()
     if (match) {
       this.playerService.updateResources(match)
-      this.updateUI()
+      this.uiService.update()
 
       this.attackingEnemies = this.tileService.tiles.filter(
         t => t && t.frame === 0
@@ -60,23 +63,12 @@ export default class GameService {
 
       this.tileService.applyGravity(match)
 
-      const damage = this.playerService.damage(this.attackingEnemies)
-      this.damageService.update(damage)
-      this.updateUI()
-
-      setTimeout(() => {
-        this.damageService.clear()
-        this.updateUI()
-        this.allowInput()
-      }, 500)
+      this.damageService.update(this.attackingEnemies)
     } else {
       this.matchService.clearPath()
-      this.allowInput()
     }
-  }
 
-  updateUI () {
-    this.uiService.update(this.playerService.getStats())
+    this.allowInput()
   }
 
   allowInput () {
