@@ -148,7 +148,6 @@ export default class PlayerService {
     this._armor = this.maxArmor
     this._upgrade = 0
     this._gold = 0
-    this.updateUI()
   }
 
   damage (enemies) {
@@ -157,7 +156,7 @@ export default class PlayerService {
       amount += e.damage
     })
     this.health -= amount
-    this.updateUI()
+    return amount
   }
 
   updateResources (tiles) {
@@ -213,12 +212,10 @@ export default class PlayerService {
     this.health += potion
     this.armor += armor
     this.experience += experience
-
-    this.updateUI()
   }
 
-  updateUI () {
-    this.uiService.update({
+  getStats () {
+    return {
       gold: this.gold,
       maxGold: this.maxGold,
       health: this.health,
@@ -231,7 +228,7 @@ export default class PlayerService {
       maxUpgrade: this.maxUpgrade,
       experience: this.experience,
       maxExperience: this.maxExperience
-    })
+    }
   }
 
   // xp per kill

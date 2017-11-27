@@ -3,6 +3,7 @@ import TileService from './TileService'
 import PlayerService from './PlayerService'
 import MatchService from './MatchService'
 import UIService from '../services/UIService'
+import DamageService from '../services/DamageService'
 
 export default class GameService {
   constructor (state) {
@@ -15,12 +16,14 @@ export default class GameService {
     this.matchService = new MatchService(this)
     this.arrowService = new ArrowService(this)
     this.uiService = new UIService(this)
+    this.damageService = new DamageService(this)
     this.playerService = new PlayerService(this)
 
     this.allowInput = this.allowInput.bind(this)
     this.game.input.onDown.add(this.onPress, this)
 
     this.playerService.reset()
+    this.updateUI()
   }
 
   onPress ({ position }) {
@@ -46,14 +49,31 @@ export default class GameService {
     const match = this.matchService.resolveMatch()
     if (match) {
       this.playerService.updateResources(match)
+      this.updateUI()
 
-      const enemies = this.tileService.tiles.filter(t => t && t.frame === 0)
-      this.tileService.applyGravity(match, this.allowInput)
-      this.playerService.damage(enemies)
+      this.attackingEnemies = this.tileService.tiles.filter(
+        t => t && t.frame === 0
+      )
+
+      this.tileService.applyGravity(match)
+
+      const damage = this.playerService.damage(this.attackingEnemies)
+      this.damageService.update(damage)
+      this.updateUI()
+
+      setTimeout(() => {
+        this.damageService.clear()
+        this.updateUI()
+        this.allowInput()
+      }, 500)
     } else {
       this.matchService.clearPath()
       this.allowInput()
     }
+  }
+
+  updateUI () {
+    this.uiService.update(this.playerService.getStats())
   }
 
   allowInput () {
