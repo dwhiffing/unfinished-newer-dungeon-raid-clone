@@ -1,9 +1,6 @@
 export default class MatchService {
-  constructor () {
+  constructor (gameService) {
     this.game = window.game
-  }
-
-  init (gameService) {
     this.match = []
     this.path = []
     this.tileService = gameService.tileService

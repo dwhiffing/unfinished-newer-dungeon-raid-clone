@@ -16,20 +16,19 @@ export default class GameService {
     this.game.input.onDown.add(this.onPress, this)
 
     this.uiService = new UIService()
-
     this.tileService = new TileService()
-    this.matchService = new MatchService()
     this.playerService = new PlayerService()
-    this.arrowService = new ArrowService()
-    this.damageService = new DamageService()
 
     this.tileService.init(this)
-    this.matchService.init(this)
     this.playerService.init(this)
-    this.arrowService.init(this)
-    this.damageService.init(this)
+
+    this.uiService.drawHeader()
+    this.damageService = new DamageService(this)
 
     this.uiService.init(this)
+
+    this.arrowService = new ArrowService(this)
+    this.matchService = new MatchService(this)
   }
 
   onPress ({ position }) {
@@ -61,14 +60,15 @@ export default class GameService {
         t => t && t.frame === 0
       )
 
-      this.tileService.applyGravity(match)
-
-      this.damageService.update(this.attackingEnemies)
+      this.tileService.applyGravity(match, this.applyDamage.bind(this))
     } else {
       this.matchService.clearPath()
+      this.allowInput()
     }
+  }
 
-    this.allowInput()
+  applyDamage () {
+    this.damageService.update(this.attackingEnemies, this.allowInput)
   }
 
   allowInput () {

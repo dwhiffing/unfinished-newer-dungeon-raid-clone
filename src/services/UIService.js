@@ -9,22 +9,22 @@ export default class UIService {
     this.footer.beginFill(0x888888)
     this.footer.drawRect(0, y - 115, x, 5)
     this.footer.endFill()
-
-    const gold = this._initText(70, y - 40, '0/50', '#ffff00', 32)
-    const health = this._initText(x - 70, y - 40, '50/50', '#ff0000', 32)
-    const armor = this._initText(x / 2, y - 70, '0/4', '#0000ff', 18)
-    const base = this._initText(x / 2 - 60, y - 70, '+5', '#ffffff', 18)
-    const weapon = this._initText(x / 2 + 60, y - 70, '+3', '#ffffff', 18)
-    const upgrade = this._initText(x / 2, y - 40, '0/100', '#0000ff', 24)
-    const experience = this._initText(x / 2, y - 10, '0/100', '#00ff00', 24)
-
-    this.texts = { gold, health, armor, base, weapon, upgrade, experience }
   }
 
   init (gameService) {
     this.state = gameService.state
     this.playerService = gameService.playerService
-    this.drawHeader()
+    const x = window.game.width
+    const y = window.game.height
+    const gold = this._initText(70, y - 40, '0/50', '#ffff00', 32)
+    const health = this._initText(x - 70, y - 40, '50/50', '#ff0000', 32)
+    const armor = this._initText(x / 2, y - 70, '0/4', '#6562F0', 18)
+    const base = this._initText(x / 2 - 60, y - 70, '+5', '#ffffff', 18)
+    const weapon = this._initText(x / 2 + 60, y - 70, '+3', '#ffffff', 18)
+    const upgrade = this._initText(x / 2, y - 40, '0/100', '#6562F0', 24)
+    const experience = this._initText(x / 2, y - 10, '0/100', '#00ff00', 24)
+
+    this.texts = { gold, health, armor, base, weapon, upgrade, experience }
     this.update()
   }
 

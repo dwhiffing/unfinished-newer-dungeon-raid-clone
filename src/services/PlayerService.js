@@ -45,27 +45,13 @@ export default class PlayerService {
   }
 
   set health (newHealth) {
-    if (newHealth > this._health) {
-      this._health = newHealth
-      if (this._health > this.maxHealth) {
-        this._health = this.maxHealth
-      }
-      return
+    this._health = newHealth
+    if (this._health > this.maxHealth) {
+      this._health = this.maxHealth
     }
-
-    let incomingDamage = this._health - newHealth
-    if (this.armor > 0) {
-      let armor = this.armor
-      this.armor -= incomingDamage
-      incomingDamage -= armor
-    }
-
-    if (incomingDamage > 0) {
-      this._health -= incomingDamage
-      if (this._health <= 0) {
-        console.log('Game over!')
-        this._health = 0
-      }
+    if (this._health <= 0) {
+      console.log('Game over!')
+      this._health = 0
     }
   }
 

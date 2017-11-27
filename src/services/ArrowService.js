@@ -7,9 +7,6 @@ export default class ArrowService {
     this.group.x = 0
     this.group.y = 125
     this.updateArrow = this.updateArrow.bind(this)
-  }
-
-  init (gameService) {
     this.group.alpha = 0.9
     this.arrows = []
   }
