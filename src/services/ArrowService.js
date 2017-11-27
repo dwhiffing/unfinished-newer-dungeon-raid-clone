@@ -18,7 +18,7 @@ export default class ArrowService {
         return
       }
 
-      this.createArrow(tiles[index], tiles[index - 1])
+      this._createArrow(tiles[index], tiles[index - 1])
     })
   }
 

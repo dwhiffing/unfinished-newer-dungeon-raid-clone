@@ -9,41 +9,6 @@ export default class PlayerService {
     this.game = window.game
   }
 
-  get experience () {
-    return this._experience
-  }
-
-  set experience (newExperience) {
-    this._experience = newExperience
-    if (this._experience >= this.maxExperience) {
-      this.level += 1
-      console.log('Level up!')
-    }
-  }
-
-  get maxExperience () {
-    return 50 + 1 * this.level - 1
-  }
-
-  get upgrade () {
-    return this._upgrade
-  }
-
-  set upgrade (newUpgrade) {
-    this._upgrade = newUpgrade
-    if (this._upgrade >= this.maxUpgrade) {
-      console.log('Upgrade!')
-    }
-  }
-
-  get maxUpgrade () {
-    return 50 + 1 * this.dexterity - 1
-  }
-
-  get health () {
-    return this._health
-  }
-
   set health (newHealth) {
     this._health = newHealth
     if (this._health > this.maxHealth) {
@@ -53,14 +18,8 @@ export default class PlayerService {
       console.log('Game over!')
       this._health = 0
     }
-  }
 
-  get maxHealth () {
-    return 50 + 10 * this.dexterity - 10
-  }
-
-  get armor () {
-    return this._armor
+    this.uiService.update()
   }
 
   set armor (newArmor) {
@@ -85,14 +44,8 @@ export default class PlayerService {
     if (this._armor < 0) {
       this._armor = 0
     }
-  }
 
-  get maxArmor () {
-    return this.items[1] + this.items[2] + this.items[3]
-  }
-
-  get gold () {
-    return this._gold
+    this.uiService.update()
   }
 
   set gold (newGold) {
@@ -105,10 +58,67 @@ export default class PlayerService {
       console.log('New Item!!')
       this._gold = 0
     }
+
+    this.uiService.update()
+  }
+
+  set upgrade (newUpgrade) {
+    this._upgrade = newUpgrade
+    if (this._upgrade >= this.maxUpgrade) {
+      console.log('Upgrade!')
+    }
+
+    this.uiService.update()
+  }
+
+  set experience (newExperience) {
+    this._experience = newExperience
+    if (this._experience >= this.maxExperience) {
+      this.level += 1
+      console.log('Level up!')
+    }
+
+    this.uiService.update()
+  }
+
+  get health () {
+    return this._health
+  }
+
+  get armor () {
+    return this._armor
+  }
+
+  get gold () {
+    return this._gold
+  }
+
+  get upgrade () {
+    return this._upgrade
+  }
+
+  get experience () {
+    return this._experience
+  }
+
+  get maxHealth () {
+    return 50 + 10 * this.dexterity - 10
+  }
+
+  get maxArmor () {
+    return this.items[1] + this.items[2] + this.items[3]
   }
 
   get maxGold () {
     return 50 + 1 * this.luck - 1
+  }
+
+  get maxUpgrade () {
+    return 50 + 1 * this.dexterity - 1
+  }
+
+  get maxExperience () {
+    return 50 + 1 * this.level - 1
   }
 
   get baseDamage () {
