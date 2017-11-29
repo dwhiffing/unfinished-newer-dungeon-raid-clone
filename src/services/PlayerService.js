@@ -51,7 +51,7 @@ export default class PlayerService {
       this._health = this.maxHealth
     }
     if (this._health <= 0) {
-      this.state = -1
+      this.game.state.start('GameOver')
       this._health = 0
     }
 

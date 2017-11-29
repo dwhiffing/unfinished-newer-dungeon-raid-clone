@@ -1,5 +1,6 @@
 export default class UIService {
   constructor () {
+    this.game = window.game
     const x = window.game.width
     const y = window.game.height
 
@@ -36,7 +37,9 @@ export default class UIService {
     this.header.beginFill(0x888888)
     this.header.drawRect(0, 115, x, 5)
 
-    this._initText(x / 2, 60, 'Dungeon Raid', '#77BFA3', 40)
+    const text = this._initText(x / 2, 60, 'Dungeon Raid', '#77BFA3', 40)
+    text.inputEnabled = true
+    text.events.onInputUp.add(() => this.game.state.start('GameOver'))
   }
 
   update () {
