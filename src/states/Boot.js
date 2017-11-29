@@ -18,6 +18,8 @@ export default class extends Phaser.State {
     )
     text.anchor.setTo(0.5, 0.5)
 
+    window.game.scale.scaleMode = Phaser.ScaleManager.RESIZE
+
     this.load.image('loaderBg', './assets/images/loader-bg.png')
     this.load.image('loaderBar', './assets/images/loader-bar.png')
   }

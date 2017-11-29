@@ -1,8 +1,5 @@
 import Phaser from 'phaser'
 
-const GRID_SIZE = 6
-const TILE_SIZE = 70
-
 export default class extends Phaser.Sprite {
   constructor ({ game }) {
     super(game, 0, 0, 'tile')
@@ -12,19 +9,22 @@ export default class extends Phaser.Sprite {
 
   reset (index) {
     const coords = this._getCoordsFromIndex(index)
+
     this.position = {
-      x: coords.x * TILE_SIZE + 30,
-      y: coords.y * TILE_SIZE + 30
+      x: coords.x * 600 * window.devicePixelRatio / 3 / 6,
+      y: coords.y * 600 * window.devicePixelRatio / 3 / 6
     }
     this.alpha = 0
     this.index = index
     this.visible = true
+    this.scale.setTo(window.devicePixelRatio / 3)
     this.tween().then(() => {
       this.visible = false
     })
   }
 
   destroy () {
+    this.scale.setTo(window.devicePixelRatio / 3)
     this.alpha = 0
     this.index = null
     this.visible = false
@@ -35,8 +35,8 @@ export default class extends Phaser.Sprite {
   showDyingState (index) {
     const coords = this._getCoordsFromIndex(index)
     this.position = {
-      x: coords.x * TILE_SIZE + 30,
-      y: coords.y * TILE_SIZE + 30
+      x: coords.x * window.tileSize + window.tileSize / 2,
+      y: coords.y * window.tileSize + window.tileSize / 2
     }
     this.alpha = 1
     this.tint = 0xff0000
@@ -58,6 +58,9 @@ export default class extends Phaser.Sprite {
   }
 
   _getCoordsFromIndex (index) {
-    return { y: Math.floor(index / GRID_SIZE), x: index % GRID_SIZE }
+    return {
+      y: Math.floor(index / window.gridDim),
+      x: index % window.gridDim
+    }
   }
 }

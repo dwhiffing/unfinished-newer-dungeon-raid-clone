@@ -1,6 +1,7 @@
 export default class UIService {
   constructor () {
     this.game = window.game
+    this.group = this.game.add.group()
     const x = window.game.width
     const y = window.game.height
 
@@ -10,12 +11,15 @@ export default class UIService {
     this.footer.beginFill(0x888888)
     this.footer.drawRect(0, y - 115, x, 5)
     this.footer.endFill()
+    this.group.add(this.footer)
   }
 
   init (gameService) {
     this.state = gameService.state
     this.playerService = gameService.playerService
-    const x = window.game.width
+    this.textGroup = this.game.add.group()
+    const x =
+      window.game.width >= window.gridSize ? window.gridSize : window.game.width
     const y = window.game.height
     const gold = this._initText(70, y - 40, '0/50', '#ffff00', 32)
     const health = this._initText(x - 70, y - 40, '50/50', '#ff0000', 32)
@@ -24,6 +28,16 @@ export default class UIService {
     const weapon = this._initText(x / 2 + 60, y - 70, '+3', '#ffffff', 18)
     const upgrade = this._initText(x / 2, y - 40, '0/100', '#6562F0', 24)
     const experience = this._initText(x / 2, y - 10, '0/100', '#00ff00', 24)
+    this.textGroup.add(gold)
+    this.textGroup.add(health)
+    this.textGroup.add(armor)
+    this.textGroup.add(base)
+    this.textGroup.add(weapon)
+    this.textGroup.add(upgrade)
+    this.textGroup.add(experience)
+    this.textGroup.x = window.leftBuffer + 5
+
+    this.group.add(this.textGroup)
 
     this.texts = { gold, health, armor, base, weapon, upgrade, experience }
     this.update()
@@ -37,7 +51,7 @@ export default class UIService {
     this.header.beginFill(0x888888)
     this.header.drawRect(0, 115, x, 5)
 
-    const text = this._initText(x / 2, 60, 'Dungeon Raid', '#77BFA3', 40)
+    const text = this._initText(x / 2 + 5, 60, 'Dungeon Raid', '#77BFA3', 40)
     text.inputEnabled = true
     text.events.onInputUp.add(() => this.game.state.start('GameOver'))
   }

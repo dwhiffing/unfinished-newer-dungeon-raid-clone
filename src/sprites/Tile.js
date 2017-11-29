@@ -1,26 +1,24 @@
 import Phaser from 'phaser'
 
 const ANIMATION_DURATION = 180
-const GRID_SIZE = 6
 
 // Enemy Sword Shield Potion Gold
 
 export default class extends Phaser.Sprite {
-  constructor ({ game, size }) {
+  constructor ({ game }) {
     super(game, 0, 0, 'tile')
-    this.size = size
     this.anchor.setTo(0.5)
     this.visible = false
   }
 
   reset (index, type) {
+    this.scale.setTo(window.devicePixelRatio / 3)
     const coords = this._getCoordsFromIndex(index)
     this.position = {
-      x: coords.x * this.size + 30,
-      y: coords.y * this.size + 30
+      x: coords.x * window.tileSize + window.tileSize / 2,
+      y: coords.y * window.tileSize + window.tileSize / 2
     }
     this.coordinate = new Phaser.Point(coords.x, coords.y)
-    this.scale.setTo(1)
     this.angle = 0
     this.frame = type
     this.setIndex(index)
@@ -30,17 +28,17 @@ export default class extends Phaser.Sprite {
 
   fall (index, holes) {
     this.setIndex(index)
-    this.tween(this.y + holes * this.size, ANIMATION_DURATION * holes)
+    this.tween(this.y + holes * window.tileSize, ANIMATION_DURATION * holes)
     const { x, y } = this._getCoordsFromIndex(this.index)
     this.coordinate = new Phaser.Point(x, y)
   }
 
   respawn (index, type, holes) {
-    const _y = Math.abs(holes - Math.floor(index / GRID_SIZE))
-    this.reset(index % GRID_SIZE, type)
+    const _y = Math.abs(holes - Math.floor(index / window.gridDim))
+    this.reset(index % window.gridDim, type)
     this.position = {
-      x: (index % GRID_SIZE) * this.size + 30,
-      y: -_y * this.size + 30
+      x: (index % window.gridDim) * window.tileSize + window.tileSize / 2,
+      y: -_y * window.tileSize + window.tileSize / 2
     }
     const { x, y } = this._getCoordsFromIndex(index)
     this.coordinate = new Phaser.Point(x, y)
@@ -49,7 +47,7 @@ export default class extends Phaser.Sprite {
     const duration =
       ANIMATION_DURATION * holes * (Math.abs(this.y - 1000) / 1000)
 
-    return this.tween(this.y + holes * this.size, duration)
+    return this.tween(this.y + holes * window.tileSize, duration)
   }
 
   setIndex (index) {
@@ -101,6 +99,6 @@ export default class extends Phaser.Sprite {
   }
 
   _getCoordsFromIndex (index) {
-    return { y: Math.floor(index / GRID_SIZE), x: index % GRID_SIZE }
+    return { y: Math.floor(index / window.gridDim), x: index % window.gridDim }
   }
 }

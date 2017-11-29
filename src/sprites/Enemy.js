@@ -1,8 +1,8 @@
 import Tile from './Tile'
 
 export default class extends Tile {
-  constructor ({ game, size }) {
-    super({ game, size })
+  constructor ({ game }) {
+    super({ game })
 
     this.hpText = this._initText(game, 35, 30, `${this.hp}`, '#ff0000')
     this.indexText = this._initText(game, -13, -13, '', '#dddddd')

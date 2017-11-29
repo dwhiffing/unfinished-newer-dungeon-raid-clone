@@ -8,17 +8,18 @@ import GameState from './states/Game'
 import MenuState from './states/Menu'
 import GameOverState from './states/GameOver'
 
-import config from './config'
-
 class Game extends Phaser.Game {
   constructor () {
-    const $ = document.documentElement
-    const width =
-      $.clientWidth > config.gameWidth ? config.gameWidth : $.clientWidth
-    const height =
-      $.clientHeight > config.gameHeight ? config.gameHeight : $.clientHeight
+    const width = window.innerWidth * window.devicePixelRatio
+    const height = window.innerHeight
 
     super(width, height, Phaser.CANVAS, 'content', null)
+
+    window.gridDim = 6
+    const tileSize = 70
+    window.gridSize = window.gridDim * tileSize * window.devicePixelRatio / 3
+    window.tileSize = window.gridSize / window.gridDim
+    window.leftBuffer = window.innerWidth / 2 - window.gridSize / 2 - 1
 
     this.state.add('Boot', BootState, false)
     this.state.add('Splash', SplashState, false)

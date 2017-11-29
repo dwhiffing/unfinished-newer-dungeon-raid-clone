@@ -12,7 +12,9 @@ export default class extends Phaser.State {
 
   render () {
     if (__DEV__) {
-      // this.game.debug.spriteInfo(this.mushroom, 32, 32)
+      this.gameService.tileService.tiles.forEach(tile => {
+        // this.game.debug.spriteBounds(tile, tile.x, tile.y)
+      })
     }
   }
 }

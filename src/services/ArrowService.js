@@ -8,8 +8,8 @@ export default class ArrowService {
     this.update = this.update.bind(this)
 
     this.group = this.game.add.group()
-    this.group.x = 0
-    this.group.y = 125
+    this.group.x = window.leftBuffer
+    this.group.y = (window.innerHeight - window.gridSize) / 2
     this.group.alpha = 0.9
 
     this.damageText = this.game.add.text(0, 0, 'dmg')
@@ -62,6 +62,7 @@ export default class ArrowService {
   _createArrow (a, b) {
     const arrow = this.game.add.sprite(b.x, b.y, 'arrows')
     arrow.anchor.set(0.5)
+    arrow.scale.setTo(window.devicePixelRatio / 3)
     this.group.add(arrow)
     this.arrows.push(arrow)
 

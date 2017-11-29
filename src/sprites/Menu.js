@@ -15,8 +15,12 @@ export default class Menu {
     this.title.fontSize = 24
     this.title.fill = '#ffffff'
     this.group.add(this.title)
-
-    this.group.position = { x: 450, y: 155 }
+    this.group.alpha = 0
+    this.group.scale.setTo(window.devicePixelRatio / 3)
+    this.group.position = {
+      x: this.game.width / 2 - this.group.width / 2,
+      y: this.game.height / 2 - this.group.height / 2
+    }
 
     this.upgrades = []
     const arr = [0, 1, 2, 3]
@@ -44,14 +48,14 @@ export default class Menu {
 
     this.game.add
       .tween(this.group)
-      .to({ x: 100 }, 1000, Phaser.Easing.Linear.None, true)
+      .to({ alpha: 1 }, 500, Phaser.Easing.Linear.None, true)
   }
 
   hide () {
     return new Promise(resolve => {
       const tween = this.game.add
         .tween(this.group)
-        .to({ x: 450 }, 1000, Phaser.Easing.Linear.None, true)
+        .to({ alpha: 0 }, 500, Phaser.Easing.Linear.None, true)
       tween.onComplete.add(resolve)
     })
   }

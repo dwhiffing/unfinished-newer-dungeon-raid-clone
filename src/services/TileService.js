@@ -1,15 +1,13 @@
 import Enemy from '../sprites/Enemy'
 
-const TILE_SIZE = 70
-const GRID_SIZE = 6
 const NUM_FRAMES = 5
 
 export default class TileService {
   constructor () {
     this.game = window.game
     this.group = this.game.add.group()
-    this.group.x = 0
-    this.group.y = 125
+    this.group.x = window.leftBuffer
+    this.group.y = (window.innerHeight - window.gridSize) / 2
     this.allTiles = []
 
     while (this.allTiles.length < 100) {
@@ -24,14 +22,14 @@ export default class TileService {
 
   getTile (position) {
     if (this.group.getBounds().contains(position.x, position.y)) {
-      const _x = (position.x - this.group.x) / TILE_SIZE
-      const _y = (position.y - this.group.y) / TILE_SIZE
+      const _x = (position.x - this.group.x) / window.tileSize
+      const _y = (position.y - this.group.y) / window.tileSize
       const dx = _x - Math.floor(Math.abs(_x))
       const dy = _y - Math.floor(Math.abs(_y))
       if (dx < 0.8 && dy < 0.8) {
         const x = Math.floor(_x)
         const y = Math.floor(_y)
-        const index = x + y * GRID_SIZE
+        const index = x + y * window.gridDim
         return this.tiles[index]
       }
     }
@@ -49,7 +47,10 @@ export default class TileService {
     this.matchIndex = 0
 
     for (let index = this.tiles.length - 1; index >= 0; index--) {
-      this._applyGravityToIndex(index, this._holesAtIndex(index + GRID_SIZE))
+      this._applyGravityToIndex(
+        index,
+        this._holesAtIndex(index + window.gridDim)
+      )
     }
 
     if (this.tiles.filter(t => t == null).length > 0) {
@@ -63,17 +64,17 @@ export default class TileService {
     const tile = this.tiles[index]
     if (holes > 0 && tile) {
       this.tiles[index] = null
-      tile.fall(index + GRID_SIZE * holes, holes)
+      tile.fall(index + window.gridDim * holes, holes)
       this.tiles[tile.index] = tile
     }
   }
 
   _placeNewTiles () {
     return new Promise(resolve => {
-      for (let column = 0; column < GRID_SIZE; column++) {
+      for (let column = 0; column < window.gridDim; column++) {
         const holes = this._holesAtIndex(column)
-        for (let row = GRID_SIZE - 1; row >= 0; row--) {
-          const index = row * GRID_SIZE + column
+        for (let row = window.gridDim - 1; row >= 0; row--) {
+          const index = row * window.gridDim + column
           if (this._holesAtIndex(index) > 0) {
             this._placeTile(index, holes, resolve)
           }
@@ -97,7 +98,11 @@ export default class TileService {
 
   _holesAtIndex (_index) {
     let result = 0
-    for (let index = _index; index < this.tiles.length; index += GRID_SIZE) {
+    for (
+      let index = _index;
+      index < this.tiles.length;
+      index += window.gridDim
+    ) {
       if (this.tiles[index] == null) {
         result++
       }
@@ -107,18 +112,20 @@ export default class TileService {
 
   _setupGrid () {
     this.tiles = []
-    this.allTiles.slice(0, GRID_SIZE * GRID_SIZE).forEach((tile, index) => {
-      let frame = this._getRandomType() + 1
-      if (frame > NUM_FRAMES - 1) {
-        frame = NUM_FRAMES - 1
-      }
-      tile.reset(index, frame)
-      this.tiles[index] = tile
-    })
+    this.allTiles
+      .slice(0, window.gridDim * window.gridDim)
+      .forEach((tile, index) => {
+        let frame = this._getRandomType() + 1
+        if (frame > NUM_FRAMES - 1) {
+          frame = NUM_FRAMES - 1
+        }
+        tile.reset(index, frame)
+        this.tiles[index] = tile
+      })
   }
 
   _createTile () {
-    const tile = new Enemy({ game: this.game, size: TILE_SIZE })
+    const tile = new Enemy({ game: this.game })
     this.allTiles.push(tile)
     this.group.add(tile)
 

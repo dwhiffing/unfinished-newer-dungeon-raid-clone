@@ -14,7 +14,7 @@ export default class DamageService {
 
     this.attacks = []
     this.group = this.game.add.group()
-    this.group.y = 125
+    this.group.y = (window.innerHeight - window.gridSize) / 2
     for (let i = 0; i < 36; i++) {
       let attack = new Attack({ game: this.game })
       this.group.add(attack)
