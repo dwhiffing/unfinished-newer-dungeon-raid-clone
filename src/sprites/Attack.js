@@ -11,8 +11,8 @@ export default class extends Phaser.Sprite {
     const coords = this._getCoordsFromIndex(index)
 
     this.position = {
-      x: coords.x * 600 * window.ratio / 6,
-      y: coords.y * 600 * window.ratio / 6
+      x: coords.x * window.tileSize + window.tileSize / 2 - 4,
+      y: coords.y * window.tileSize + window.tileSize / 2
     }
     this.alpha = 0
     this.index = index
@@ -35,7 +35,7 @@ export default class extends Phaser.Sprite {
   showDyingState (index) {
     const coords = this._getCoordsFromIndex(index)
     this.position = {
-      x: coords.x * window.tileSize + window.tileSize / 2,
+      x: coords.x * window.tileSize + window.tileSize / 2 - 4,
       y: coords.y * window.tileSize + window.tileSize / 2
     }
     this.alpha = 1

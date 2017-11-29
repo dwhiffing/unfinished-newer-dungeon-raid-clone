@@ -21,6 +21,7 @@ class Game extends Phaser.Game {
     window.gridSize = window.gridDim * tileSize * window.ratio
     window.tileSize = window.gridSize / window.gridDim
     window.leftBuffer = window.innerWidth / 2 - window.gridSize / 2 - 1
+    window.topBuffer = (window.innerHeight - window.gridSize) / 2 - 50
 
     this.state.add('Boot', BootState, false)
     this.state.add('Splash', SplashState, false)

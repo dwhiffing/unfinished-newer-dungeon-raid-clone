@@ -9,7 +9,7 @@ export default class ArrowService {
 
     this.group = this.game.add.group()
     this.group.x = window.leftBuffer
-    this.group.y = (window.innerHeight - window.gridSize) / 2
+    this.group.y = window.topBuffer
     this.group.alpha = 0.9
 
     this.damageText = this.game.add.text(0, 0, 'dmg')
