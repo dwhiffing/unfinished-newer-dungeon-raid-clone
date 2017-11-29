@@ -167,7 +167,6 @@ export default class DamageService {
   _initText (x, y, string, fill, size) {
     const text = this.game.add.text(x, y, string)
     text.padding.set(10, 16)
-    text.smoothed = false
     text.anchor.setTo(0.5)
     text.fontSize = size
     text.fill = fill

@@ -54,7 +54,6 @@ export default class extends Tile {
     const text = game.add.text(x, y, string)
     text.padding.set(10, 16)
     text.fontSize = 14
-    text.smoothed = false
     text.anchor.setTo(0.5)
     text.fill = fill
     text.visible = this.frame === 0

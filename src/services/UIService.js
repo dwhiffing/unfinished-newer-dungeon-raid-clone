@@ -71,7 +71,6 @@ export default class UIService {
     const state = window.game.state.states[window.game.state.current]
     const text = state.add.text(x, y, string)
     text.padding.set(10, 16)
-    text.smoothed = false
     text.anchor.setTo(0.5)
     text.fontSize = size
     text.fill = fill

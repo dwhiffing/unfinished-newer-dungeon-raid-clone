@@ -44,7 +44,6 @@ export default class Upgrade {
 
   _initText (x, y, text) {
     const textObj = this.game.add.text(x, y, text)
-    textObj.smoothed = false
     textObj.fontSize = 12
     textObj.fill = '#ffffff'
     this.group.add(textObj)

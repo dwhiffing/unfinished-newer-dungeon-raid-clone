@@ -11,7 +11,6 @@ export default class Menu {
     this.callback = () => {}
 
     this.title = this.game.add.text(20, 20, 'Upgrade!')
-    this.title.smoothed = false
     this.title.fontSize = 24
     this.title.fill = '#ffffff'
     this.group.add(this.title)
