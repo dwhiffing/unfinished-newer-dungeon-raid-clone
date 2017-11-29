@@ -62,7 +62,7 @@ export default class ArrowService {
   _createArrow (a, b) {
     const arrow = this.game.add.sprite(b.x, b.y, 'arrows')
     arrow.anchor.set(0.5)
-    arrow.scale.setTo(window.devicePixelRatio / 3)
+    arrow.scale.setTo(window.ratio)
     this.group.add(arrow)
     this.arrows.push(arrow)
 

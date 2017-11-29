@@ -16,7 +16,7 @@ export default class Menu {
     this.title.fill = '#ffffff'
     this.group.add(this.title)
     this.group.alpha = 0
-    this.group.scale.setTo(window.devicePixelRatio / 3)
+    this.group.scale.setTo(window.ratio)
     this.group.position = {
       x: this.game.width / 2 - this.group.width / 2,
       y: this.game.height / 2 - this.group.height / 2

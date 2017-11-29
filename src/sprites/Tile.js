@@ -12,7 +12,7 @@ export default class extends Phaser.Sprite {
   }
 
   reset (index, type) {
-    this.scale.setTo(window.devicePixelRatio / 3)
+    this.scale.setTo(window.ratio)
     const coords = this._getCoordsFromIndex(index)
     this.position = {
       x: coords.x * window.tileSize + window.tileSize / 2,

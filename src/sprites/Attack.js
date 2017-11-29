@@ -11,20 +11,20 @@ export default class extends Phaser.Sprite {
     const coords = this._getCoordsFromIndex(index)
 
     this.position = {
-      x: coords.x * 600 * window.devicePixelRatio / 3 / 6,
-      y: coords.y * 600 * window.devicePixelRatio / 3 / 6
+      x: coords.x * 600 * window.ratio / 6,
+      y: coords.y * 600 * window.ratio / 6
     }
     this.alpha = 0
     this.index = index
     this.visible = true
-    this.scale.setTo(window.devicePixelRatio / 3)
+    this.scale.setTo(window.ratio)
     this.tween().then(() => {
       this.visible = false
     })
   }
 
   destroy () {
-    this.scale.setTo(window.devicePixelRatio / 3)
+    this.scale.setTo(window.ratio)
     this.alpha = 0
     this.index = null
     this.visible = false

@@ -10,14 +10,15 @@ import GameOverState from './states/GameOver'
 
 class Game extends Phaser.Game {
   constructor () {
-    const width = window.innerWidth * window.devicePixelRatio
+    window.ratio = 1
+    const width = window.innerWidth * window.ratio
     const height = window.innerHeight
 
     super(width, height, Phaser.CANVAS, 'content', null)
 
     window.gridDim = 6
     const tileSize = 70
-    window.gridSize = window.gridDim * tileSize * window.devicePixelRatio / 3
+    window.gridSize = window.gridDim * tileSize * window.ratio
     window.tileSize = window.gridSize / window.gridDim
     window.leftBuffer = window.innerWidth / 2 - window.gridSize / 2 - 1
 
