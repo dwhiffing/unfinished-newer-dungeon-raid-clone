@@ -2,6 +2,7 @@ var path = require('path')
 var webpack = require('webpack')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var BrowserSyncPlugin = require('browser-sync-webpack-plugin')
+var CopyWebpackPlugin = require('copy-webpack-plugin')
 
 var phaserModule = path.join(__dirname, '/node_modules/phaser-ce/')
 var phaser = path.join(phaserModule, 'build/custom/phaser-split.js')
@@ -20,7 +21,7 @@ module.exports = {
   devtool: 'cheap-source-map',
   output: {
     pathinfo: true,
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'build'),
     publicPath: './',
     filename: 'bundle.js'
   },
@@ -48,11 +49,12 @@ module.exports = {
       },
       hash: false
     }),
+    new CopyWebpackPlugin([{ from: 'assets/images', to: 'assets/images' }]),
     new BrowserSyncPlugin({
       host: process.env.IP || 'localhost',
       port: process.env.PORT || 3000,
       server: {
-        baseDir: ['./dist', './build']
+        baseDir: ['./build']
       }
     })
   ],
