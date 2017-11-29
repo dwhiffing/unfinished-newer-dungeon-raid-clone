@@ -2,8 +2,9 @@ import ArrowService from './ArrowService'
 import TileService from './TileService'
 import PlayerService from './PlayerService'
 import MatchService from './MatchService'
-import UIService from '../services/UIService'
-import DamageService from '../services/DamageService'
+import Menu from '../sprites/Menu'
+import UIService from './UIService'
+import DamageService from './DamageService'
 
 export default class GameService {
   constructor (state) {
@@ -29,6 +30,8 @@ export default class GameService {
 
     this.arrowService = new ArrowService(this)
     this.matchService = new MatchService(this)
+
+    this.menu = new Menu({ game: this.game })
   }
 
   onPress ({ position }) {
@@ -54,18 +57,32 @@ export default class GameService {
     const match = this.matchService.resolveMatch()
     if (match) {
       this.playerService.updateResources(match)
-      this.uiService.update()
 
       const enemies = this.tileService.tiles.filter(t => t && t.frame === 0)
       this.tileService.applyGravity(match).then(() => {
-        this.damageService.update(enemies).then(() => {
-          this.allowInput()
+        const menu = this.playerService.getMenuState()
+        if (!menu) {
+          return this.applyDamage(enemies)
+        }
+
+        this.menu.show({
+          data: menu.data,
+          title: menu.title,
+          callback: () => this.applyDamage(enemies)
         })
       })
-    } else {
-      this.matchService.clearPath()
-      this.allowInput()
+      return
     }
+
+    this.matchService.clearPath()
+    this.allowInput()
+  }
+
+  applyDamage (enemies) {
+    this.playerService.state = 0
+    this.damageService.update(enemies).then(() => {
+      this.allowInput()
+    })
   }
 
   allowInput () {

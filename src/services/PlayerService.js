@@ -1,3 +1,10 @@
+import items from '../data/items'
+import upgrades from '../data/upgrades'
+import skills from '../data/skills'
+
+const datum = [items, upgrades, skills]
+const titles = ['Shop!', 'Upgrade!', 'Level Up!']
+
 // Barbarian - Can jump over tiles to hit more enemies/swords
 // Paladin - Can bash with shield
 // Thief - Gold speciality
@@ -7,15 +14,44 @@
 export default class PlayerService {
   constructor () {
     this.game = window.game
+    this.state = 0
+  }
+
+  init (gameService) {
+    this.uiService = gameService.uiService
+    this.tileService = gameService.tileService
+
+    this.level = 1
+    this._totalExperience = 0
+    this._experience = 0
+
+    this.strength = 1
+    this.dexterity = 1
+    this.vitality = 1
+    this.luck = 1
+    this.items = [3, 2, 1, 1]
+
+    this._totalArmor = 0
+    this._armor = this.maxArmor
+    this._totalUpgrades = 0
+    this._upgradeProgress = 0
+
+    this._totalGold = 0
+    this._gold = 0
+    this._totalItems = 0
+
+    this._totalPotions = 0
+    this._health = this.maxHealth
   }
 
   set health (newHealth) {
+    this._totalPotions += newHealth - this._health
     this._health = newHealth
     if (this._health > this.maxHealth) {
       this._health = this.maxHealth
     }
     if (this._health <= 0) {
-      console.log('Game over!')
+      this.state = -1
       this._health = 0
     }
 
@@ -23,6 +59,7 @@ export default class PlayerService {
   }
 
   set armor (newArmor) {
+    this._totalArmor += newArmor - this._armor
     if (newArmor > this._armor) {
       let incomingArmor = newArmor - this._armor
       let armor = this._armor
@@ -49,13 +86,12 @@ export default class PlayerService {
   }
 
   set gold (newGold) {
+    this._totalGold += newGold - this._gold
     this._gold = newGold
-    if (newGold > this.maxGold) {
-      this._gold = this.maxGold
-    }
 
-    if (newGold > this.maxGold) {
-      console.log('New Item!!')
+    if (newGold >= this.maxGold) {
+      this._totalItems++
+      this.state = 1
       this._gold = 0
     }
 
@@ -63,19 +99,24 @@ export default class PlayerService {
   }
 
   set upgrade (newUpgrade) {
-    this._upgrade = newUpgrade
-    if (this._upgrade >= this.maxUpgrade) {
-      console.log('Upgrade!')
+    this._upgradeProgress = newUpgrade
+    if (this._upgradeProgress >= this.maxUpgrade) {
+      this._totalUpgrades++
+      this.upgrades++
+      this.state = 2
+      this._upgradeProgress = 0
     }
 
     this.uiService.update()
   }
 
   set experience (newExperience) {
+    this._totalExperience += newExperience - this._experience
     this._experience = newExperience
     if (this._experience >= this.maxExperience) {
-      this.level += 1
-      console.log('Level up!')
+      this._totalUpgrades++
+      this.state = 3
+      this._experience = 0
     }
 
     this.uiService.update()
@@ -94,7 +135,7 @@ export default class PlayerService {
   }
 
   get upgrade () {
-    return this._upgrade
+    return this._upgradeProgress
   }
 
   get experience () {
@@ -127,24 +168,6 @@ export default class PlayerService {
 
   get weaponDamage () {
     return this.items[0]
-  }
-
-  init (gameService) {
-    this.uiService = gameService.uiService
-    this.tileService = gameService.tileService
-
-    this.strength = 1
-    this.level = 1
-    this.vitality = 1
-    this.dexterity = 1
-    this.luck = 1
-    this.items = [3, 2, 1, 1]
-
-    this._experience = 0
-    this._health = this.maxHealth
-    this._armor = this.maxArmor
-    this._upgrade = 0
-    this._gold = 0
   }
 
   updateResources (tiles) {
@@ -200,6 +223,8 @@ export default class PlayerService {
     this.health += potion
     this.armor += armor
     this.experience += experience
+
+    this.uiService.update()
   }
 
   getStats () {
@@ -217,6 +242,12 @@ export default class PlayerService {
       experience: this.experience,
       maxExperience: this.maxExperience
     }
+  }
+
+  getMenuState () {
+    const data = datum[this.state - 1]
+    const title = titles[this.state - 1]
+    return data && title ? { data, title } : null
   }
 
   // xp per kill
