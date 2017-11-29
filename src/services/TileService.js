@@ -7,7 +7,7 @@ export default class TileService {
     this.game = window.game
     this.group = this.game.add.group()
     this.group.x = window.leftBuffer
-    this.group.y = (window.innerHeight - window.gridSize) / 2
+    this.group.y = (window.innerHeight - window.gridSize) / 2 - 50
     this.allTiles = []
 
     while (this.allTiles.length < 100) {

@@ -23,7 +23,6 @@ export default class GameService {
     this.tileService.init(this)
     this.playerService.init(this)
 
-    this.uiService.drawHeader()
     this.damageService = new DamageService(this)
 
     this.uiService.init(this)
