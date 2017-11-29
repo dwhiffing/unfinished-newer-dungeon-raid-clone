@@ -87,10 +87,11 @@ export default class TileService {
     const frame = this._getRandomType()
     this.tiles[index] = tile
     tile.respawn(index, frame, holes).then(() => {
-      const matchLength = this.match.filter(t => t.frame !== 0).length - 1
-      if (this.matchIndex++ === matchLength) {
+      const match = this.match.filter(t => t.frame !== 0 || t.hp <= 0)
+      if (this.matchIndex === match.length - 1) {
         resolve()
       }
+      this.matchIndex++
     })
   }
 
