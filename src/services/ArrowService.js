@@ -1,18 +1,46 @@
 import Phaser from 'phaser'
 
 export default class ArrowService {
-  constructor () {
+  constructor (gameService) {
     this.game = window.game
+    this.playerService = gameService.playerService
+    this.damageService = gameService.damageService
     this.update = this.update.bind(this)
 
     this.group = this.game.add.group()
     this.group.x = 0
     this.group.y = 125
     this.group.alpha = 0.9
+
+    this.damageText = this.game.add.text(0, 0, 'dmg')
+
+    this.clear()
   }
 
-  update (tiles) {
+  update (position, tiles) {
+    this.damageText.x = position.x
+    this.damageText.y = position.y - 30
+
+    if (JSON.stringify(tiles.map(t => t.index)) === this.tileIndexes) {
+      return
+    }
+
     this.clear()
+    this.tileIndexes = JSON.stringify(tiles.map(t => t.index))
+
+    if (tiles[0].frame <= 1 && tiles.length >= 3) {
+      const swords = tiles.reduce((s, t) => s + (t.frame === 1 ? 1 : 0), 0)
+      const damage =
+        this.playerService.weaponDamage * swords + this.playerService.baseDamage
+      const dyingEnemies = tiles.filter(
+        t => t.frame === 0 && t.armor + t.hp - damage <= 0
+      )
+
+      this.damageText.alpha = 1
+      this.damageText.text = `${damage} DMG`
+      this.damageService.showDyingEnemies(dyingEnemies)
+    }
+
     tiles.forEach((tile, index) => {
       if (index === 0) {
         return
@@ -23,7 +51,11 @@ export default class ArrowService {
   }
 
   clear () {
+    this.tileIndexes = null
     this.group.removeAll(true)
+    this.damageText.fill = '#f00'
+    this.damageText.alpha = 0
+    this.damageService.attacks.forEach(t => t.destroy())
     this.arrows = []
   }
 

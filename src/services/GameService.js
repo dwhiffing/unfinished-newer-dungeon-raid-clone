@@ -45,7 +45,7 @@ export default class GameService {
 
   onMove ({ position }) {
     this.matchService.selectTile(position)
-    this.arrowService.update(this.matchService.getTilesInMatch())
+    this.arrowService.update(position, this.matchService.getTilesInMatch())
   }
 
   onRelease () {

@@ -58,6 +58,19 @@ export default class DamageService {
     })
   }
 
+  showDyingEnemies (enemies = this.enemies) {
+    this.attacks.forEach(t => t.destroy())
+    enemies.forEach((enemy, i) => {
+      if (this.attacks.filter(a => a.index === enemy.index).length > 0) {
+        return
+      }
+      const attack = this.attacks.find(a => !a.visible)
+      if (attack) {
+        attack.showDyingState(enemy.index)
+      }
+    })
+  }
+
   _showOverlay () {
     return new Promise(resolve => {
       const tween = this.game.add
@@ -118,16 +131,6 @@ export default class DamageService {
       .tween(this.banner)
       .to(opts, 500, Phaser.Easing.None)
     return tween
-  }
-
-  _damageArmor () {
-    const { armor } = this._getDamage()
-    this.playerService.armor -= armor
-  }
-
-  _damageHp () {
-    const { health } = this._getDamage()
-    this.playerService.health -= health
   }
 
   _hideOverlay () {
