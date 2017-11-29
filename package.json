@@ -7,7 +7,7 @@
   "scripts": {
     "start": "webpack",
     "prod": "webpack --config webpack.production.config.js",
-    "deploy": "git subtree push --prefix dist origin gh-pages",
+    "deploy": "git add -A; git commit -m \"Updates dist\"; git subtree push --prefix dist origin gh-pages",
     "test": "eslint ./src/**/**.js"
   },
   "license": "MIT",
