@@ -19,7 +19,7 @@ export default class ArrowService {
 
   update (position, tiles) {
     this.damageText.x = position.x
-    this.damageText.y = position.y - 30
+    this.damageText.y = position.y - 80
 
     if (JSON.stringify(tiles.map(t => t.index)) === this.tileIndexes) {
       return

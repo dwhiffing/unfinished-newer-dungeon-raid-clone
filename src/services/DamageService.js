@@ -14,6 +14,7 @@ export default class DamageService {
 
     this.attacks = []
     this.group = this.game.add.group()
+    this.group.x = window.leftBuffer
     this.group.y = window.topBuffer
     for (let i = 0; i < 36; i++) {
       let attack = new Attack({ game: this.game })
