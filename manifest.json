@@ -1,0 +1,35 @@
+{
+  "name": "Dungeon Raid",
+  "short_name": "Dungeon Raid",
+  "icons": [
+    {
+      "src": "assets/images/box.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/images/box.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/images/box.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/images/box.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/images/box.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#3E4EB8",
+  "theme_color": "#2F3BA2"
+}
