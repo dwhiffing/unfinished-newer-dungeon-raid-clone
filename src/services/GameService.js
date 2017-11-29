@@ -56,19 +56,16 @@ export default class GameService {
       this.playerService.updateResources(match)
       this.uiService.update()
 
-      this.attackingEnemies = this.tileService.tiles.filter(
-        t => t && t.frame === 0
-      )
-
-      this.tileService.applyGravity(match, this.applyDamage.bind(this))
+      const enemies = this.tileService.tiles.filter(t => t && t.frame === 0)
+      this.tileService.applyGravity(match).then(() => {
+        this.damageService.update(enemies).then(() => {
+          this.allowInput()
+        })
+      })
     } else {
       this.matchService.clearPath()
       this.allowInput()
     }
-  }
-
-  applyDamage () {
-    this.damageService.update(this.attackingEnemies, this.allowInput)
   }
 
   allowInput () {

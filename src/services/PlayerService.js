@@ -158,7 +158,7 @@ export default class PlayerService {
       if (tile.frame === 0) {
         return
       }
-      this.tileService.removeTile(tile.index)
+      this.tileService.destroyTile(tile.index)
       if (tile.frame === 4) {
         gold++
       } else if (tile.frame === 3) {
@@ -188,7 +188,7 @@ export default class PlayerService {
 
           if (tile.hp <= 0) {
             experience++
-            this.tileService.removeTile(tile.index)
+            this.tileService.destroyTile(tile.index)
           }
         }
 

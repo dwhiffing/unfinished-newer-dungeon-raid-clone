@@ -4,6 +4,7 @@ import Attack from '../sprites/Attack'
 export default class DamageService {
   constructor (gameService) {
     this.game = gameService.game
+    this.gameService = gameService
     this.playerService = gameService.playerService
 
     this.graphics = this.game.add.graphics(0, 0)
@@ -30,79 +31,92 @@ export default class DamageService {
     this.banner.alpha = 0
   }
 
-  update (enemies, callback) {
-    this.callback = callback
-    let damage = 0
+  update (enemies) {
+    return new Promise(resolve => {
+      let damage = 0
 
-    enemies.forEach(e => {
-      damage += e.damage
+      enemies.forEach(e => {
+        damage += e.damage
+      })
+
+      if (damage === 0) {
+        return resolve()
+      }
+
+      if (damage > 0) {
+        this.enemies = enemies
+        this.damage = damage
+
+        return this._showOverlay().then(() => {
+          this._animateAttacks().then(() => {
+            this._showDamage().then(() => {
+              this._hideOverlay().then(resolve)
+            })
+          })
+        })
+      }
     })
-
-    if (damage > 0) {
-      this.enemies = enemies
-      this.damage = damage
-      this._showOverlay(this._animateAttacks.bind(this))
-    } else {
-      this.callback()
-    }
   }
 
-  _showOverlay (callback) {
-    const tween = this.game.add
-      .tween(this.graphics)
-      .to({ alpha: 0.8 }, 250, Phaser.Easing.None, true)
-    tween.onComplete.add(callback)
+  _showOverlay () {
+    return new Promise(resolve => {
+      const tween = this.game.add
+        .tween(this.graphics)
+        .to({ alpha: 0.8 }, 250, Phaser.Easing.None, true)
+      tween.onComplete.add(() => resolve())
+    })
   }
 
   _animateAttacks () {
-    this.enemies.forEach((enemy, i) => {
-      const attack = this.attacks.find(a => !a.visible)
-      if (i === 0) {
-        attack.reset(enemy.index, this._showDamage.bind(this))
-      } else {
-        attack.reset(enemy.index)
-      }
+    return new Promise(resolve => {
+      this.enemies.forEach((enemy, i) => {
+        this.attacks.find(a => !a.visible).reset(enemy.index)
+      })
+      setTimeout(resolve, 500)
     })
   }
 
   _showDamage () {
-    const x = this.game.width
-    const y = this.game.height
-    this.banner.text = `${this.damage} DMG`
-    this.banner.x = x / 2
-    this.banner.y = y / 2
-    const tween1 = this.game.add
-      .tween(this.banner)
-      .to({ alpha: 1 }, 500, Phaser.Easing.None, true)
+    return new Promise(resolve => {
+      this.banner.text = `${this.damage} DMG`
+      this.banner.x = this.game.width / 2
+      this.banner.y = this.game.height / 2
 
-    const { armor, health } = this._getDamage()
+      const tweens = [
+        this.game.add
+          .tween(this.banner)
+          .to({ alpha: 1 }, 500, Phaser.Easing.None, true)
+      ]
 
-    if (armor > 0) {
-      const tween2 = this.animateDamage(x / 2, this._damageArmor.bind(this))
-      tween1.chain(tween2)
-      if (health > 0) {
-        const tween3 = this.animateDamage(x - 100, this._damageHp.bind(this))
-        tween2.chain(tween3)
-        tween3.onComplete.add(this._hideOverlay, this)
-      } else {
-        tween2.onComplete.add(this._hideOverlay, this)
+      const { armor, health } = this._getDamage()
+
+      if (armor > 0) {
+        const toArmorTween = this.animateDamage(this.game.width / 2)
+        tweens[tweens.length - 1].chain(toArmorTween)
+        toArmorTween.onComplete.add(() => {
+          this.playerService.armor -= armor
+        })
+        tweens.push(toArmorTween)
       }
-    } else {
-      const tween2 = this.animateDamage(
-        this.game.width - 100,
-        this._damageHp.bind(this)
-      )
-      tween1.chain(tween2)
-      tween2.onComplete.add(this._hideOverlay, this)
-    }
+
+      if (health > 0) {
+        const toHealthTween = this.animateDamage(this.game.width - 100)
+        tweens[tweens.length - 1].chain(toHealthTween)
+        toHealthTween.onComplete.add(() => {
+          this.playerService.health -= health
+        })
+        tweens.push(toHealthTween)
+      }
+
+      tweens[tweens.length - 1].onComplete.add(resolve)
+    })
   }
 
-  animateDamage (x, callback) {
+  animateDamage (x) {
     const opts = { delay: 1500, y: this.game.height - 100, x }
     const tween = this.game.add
       .tween(this.banner)
       .to(opts, 500, Phaser.Easing.None)
-    callback && tween.onComplete.add(callback)
     return tween
   }
 
@@ -117,15 +131,17 @@ export default class DamageService {
   }
 
   _hideOverlay () {
-    const tween = this.game.add
-      .tween(this.graphics)
-      .to({ alpha: 0 }, 500, Phaser.Easing.None, true)
+    return new Promise(resolve => {
+      const tween = this.game.add
+        .tween(this.graphics)
+        .to({ alpha: 0 }, 500, Phaser.Easing.None, true)
 
-    this.game.add
-      .tween(this.banner)
-      .to({ alpha: 0 }, 500, Phaser.Easing.None, true)
+      this.game.add
+        .tween(this.banner)
+        .to({ alpha: 0 }, 500, Phaser.Easing.None, true)
 
-    tween.onComplete.add(this.callback)
+      tween.onComplete.add(resolve)
+    })
   }
 
   _getDamage () {

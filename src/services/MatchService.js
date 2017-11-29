@@ -7,7 +7,7 @@ export default class MatchService {
   }
 
   selectTile (position) {
-    const tile = this.tileService.pickTile(position)
+    const tile = this.tileService.getTile(position)
     if (!tile || this._checkForDeselect(tile) || tile.picked) {
       return
     }
@@ -27,7 +27,7 @@ export default class MatchService {
 
   resolveMatch () {
     if (this.path.length < 3) {
-      this.tileService.clearPick()
+      this.path.forEach(t => this.tileService.tiles[t].unpick())
       return false
     }
 

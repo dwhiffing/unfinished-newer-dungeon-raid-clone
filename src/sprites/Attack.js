@@ -10,7 +10,7 @@ export default class extends Phaser.Sprite {
     this.visible = false
   }
 
-  reset (index, callback) {
+  reset (index) {
     const coords = this._getCoordsFromIndex(index)
     this.position = {
       x: coords.x * TILE_SIZE + 30,
@@ -18,25 +18,22 @@ export default class extends Phaser.Sprite {
     }
     this.alpha = 0
     this.visible = true
-    this.tween(callback)
+    this.tween().then(() => {
+      this.visible = false
+    })
   }
 
-  tween (callback) {
-    const tween = this.game.add
-      .tween(this)
-      .to({ alpha: 1 }, 250, Phaser.Easing.Linear.None, true)
-
-    tween.onComplete.add(() => {
+  tween () {
+    return new Promise(resolve => {
       const tween = this.game.add
         .tween(this)
-        .to({ alpha: 0 }, 250, Phaser.Easing.Linear.None, true)
-      tween.onComplete.add(() => {
-        this.visible = false
-        callback && callback()
-      })
+        .to({ alpha: 1 }, 250, Phaser.Easing.Linear.None, true)
+      const tween2 = this.game.add
+        .tween(this)
+        .to({ alpha: 0 }, 250, Phaser.Easing.Linear.None)
+      tween.chain(tween2)
+      tween2.onComplete.add(resolve)
     })
-
-    return tween
   }
 
   _getCoordsFromIndex (index) {

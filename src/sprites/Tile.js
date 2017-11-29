@@ -23,35 +23,37 @@ export default class extends Phaser.Sprite {
     this.scale.setTo(1)
     this.angle = 0
     this.frame = type
-    this.index = index
+    this.setIndex(index)
     this.visible = true
     this.picked = false
   }
 
-  fall (fallDistance, callback) {
-    const duration = ANIMATION_DURATION * fallDistance
-    this.tween(fallDistance, callback, duration)
+  fall (index, holes) {
+    this.setIndex(index)
+    this.tween(this.y + holes * this.size, ANIMATION_DURATION * holes)
     const { x, y } = this._getCoordsFromIndex(this.index)
     this.coordinate = new Phaser.Point(x, y)
   }
 
-  respawn (index, type, fallDistance, callback) {
-    const row = Math.floor(index / GRID_SIZE)
-    const othY = Math.abs(fallDistance - row)
+  respawn (index, type, holes) {
+    const _y = Math.abs(holes - Math.floor(index / GRID_SIZE))
     this.reset(index % GRID_SIZE, type)
     this.position = {
       x: (index % GRID_SIZE) * this.size + 30,
-      y: -othY * this.size + 30
+      y: -_y * this.size + 30
     }
     const { x, y } = this._getCoordsFromIndex(index)
     this.coordinate = new Phaser.Point(x, y)
-    this.index = index
+    this.setIndex(index)
 
     const duration =
-      ANIMATION_DURATION * fallDistance * (Math.abs(this.y - 1000) / 1000)
+      ANIMATION_DURATION * holes * (Math.abs(this.y - 1000) / 1000)
 
-    this.tween(fallDistance, callback, duration)
-    return this
+    return this.tween(this.y + holes * this.size, duration)
+  }
+
+  setIndex (index) {
+    this.index = index
   }
 
   pick () {
@@ -70,37 +72,32 @@ export default class extends Phaser.Sprite {
     if (this.frame === 3) {
       x = this.game.width - 100
     }
-    this.matchTween(x, this.game.height - 170, () => {
-      this.visible = false
+    this.matchTween(x, this.game.height - 170).then(this._hide.bind(this))
+  }
+
+  tween (y, duration) {
+    return new Promise(resolve => {
+      const tween = this.game.add
+        .tween(this)
+        .to({ y }, duration, Phaser.Easing.Linear.None, true)
+      tween.onComplete.add(resolve)
     })
   }
 
-  tween (y, callback, duration) {
-    const tween = this.game.add
-      .tween(this)
-      .to(
-        { y: this.y + y * this.size },
-        duration,
-        Phaser.Easing.Linear.None,
-        true
-      )
-
-    callback && tween.onComplete.add(callback, this)
-    return tween
+  matchTween (x, y) {
+    return new Promise(resolve => {
+      const tween = this.game.add
+        .tween(this)
+        .to({ x, y }, 1000, Phaser.Easing.Linear.None, true)
+      this.game.add
+        .tween(this.scale)
+        .to({ x: 0.2, y: 0.2 }, 1000, Phaser.Easing.Linear.None, true)
+      tween.onComplete.add(resolve)
+    })
   }
 
-  matchTween (x, y, callback) {
-    const duration = 1000
-    const tween = this.game.add
-      .tween(this)
-      .to({ x, y }, duration, Phaser.Easing.Linear.None, true)
-    callback && tween.onComplete.add(callback, this)
-
-    this.game.add
-      .tween(this.scale)
-      .to({ x: 0.2, y: 0.2 }, duration, Phaser.Easing.Linear.None, true)
-
-    return tween
+  _hide () {
+    this.visible = false
   }
 
   _getCoordsFromIndex (index) {

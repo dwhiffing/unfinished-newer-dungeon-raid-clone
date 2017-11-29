@@ -5,10 +5,13 @@ export default class extends Tile {
     super({ game, size })
 
     this.hpText = this._initText(game, 35, 30, `${this.hp}`, '#ff0000')
+    this.indexText = this._initText(game, -13, -13, '', '#dddddd')
     this.damageText = this._initText(game, 35, -10, `${this.damage}`, '#ffffff')
     this.armorText = this._initText(game, 35, 5, `${this.armor}`, '#eeeeee')
     this.texts = [this.hpText, this.damageText, this.armorText]
     this.level = 1
+
+    this.indexText.visible = false
   }
 
   reset (index, type) {
@@ -28,6 +31,11 @@ export default class extends Tile {
     this.armorText.text = `${this.armor}`
     this.damageText.text = `${this.damage}`
     this.hpText.text = `${this.hp}`
+  }
+
+  setIndex (index) {
+    super.setIndex(index)
+    this.indexText.text = `${index}`
   }
 
   _toggleStats (value) {
