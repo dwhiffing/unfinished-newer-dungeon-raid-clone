@@ -1,6 +1,6 @@
 {
-  "name": "Dungeon Raid",
   "short_name": "Dungeon Raid",
+  "name": "Dungeon Raid",
   "icons": [
     {
       "src": "assets/icons/icon@128.png",
@@ -29,7 +29,8 @@
     }
   ],
   "start_url": "/index.html",
-  "display": "standalone",
+  "display": "fullscreen",
+  "orientation": "portrait",
   "background_color": "#3E4EB8",
   "theme_color": "#2F3BA2"
 }
