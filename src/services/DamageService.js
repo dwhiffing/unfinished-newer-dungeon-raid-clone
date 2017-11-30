@@ -108,6 +108,7 @@ export default class DamageService {
         const toArmorTween = this.animateDamage(this.game.width / 2)
         tweens[tweens.length - 1].chain(toArmorTween)
         toArmorTween.onComplete.add(() => {
+          window.navigator.vibrate(50)
           this.playerService.armor -= armor
         })
         tweens.push(toArmorTween)
@@ -117,6 +118,7 @@ export default class DamageService {
         const toHealthTween = this.animateDamage(this.game.width - 100)
         tweens[tweens.length - 1].chain(toHealthTween)
         toHealthTween.onComplete.add(() => {
+          window.navigator.vibrate(200)
           this.playerService.health -= health
         })
         tweens.push(toHealthTween)
