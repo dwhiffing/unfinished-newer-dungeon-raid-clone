@@ -43,6 +43,7 @@ export default class ArrowService {
 
     tiles.forEach((tile, index) => {
       if (index === 0) {
+        window.navigator.vibrate(10)
         return
       }
 
