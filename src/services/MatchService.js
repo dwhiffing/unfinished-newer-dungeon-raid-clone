@@ -12,6 +12,8 @@ export default class MatchService {
       return
     }
 
+    window.navigator.vibrate(200)
+
     if (this.path.length === 0) {
       this._highlightMatchingTiles(tile.frame)
       this._select(tile)
