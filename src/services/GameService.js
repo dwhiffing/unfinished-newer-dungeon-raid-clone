@@ -20,8 +20,8 @@ export default class GameService {
     this.tileService = new TileService()
     this.playerService = new PlayerService()
 
-    this.tileService.init(this)
-    this.playerService.init(this)
+    this.tileService.init(this, JSON.parse(localStorage.getItem('tile')))
+    this.playerService.init(this, JSON.parse(localStorage.getItem('player')))
 
     this.damageService = new DamageService(this)
 
@@ -85,6 +85,8 @@ export default class GameService {
   }
 
   allowInput () {
+    this.playerService.save()
+    this.tileService.save()
     if (!this.game.input.onDown.has(this.onPress, this)) {
       this.game.input.onDown.add(this.onPress, this)
     }

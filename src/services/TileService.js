@@ -15,9 +15,9 @@ export default class TileService {
     }
   }
 
-  init (gameService) {
+  init (gameService, data) {
     this.gameService = gameService
-    this._setupGrid()
+    this._setupGrid(data)
   }
 
   getTile (position) {
@@ -58,6 +58,10 @@ export default class TileService {
     } else {
       return new Promise(resolve => resolve())
     }
+  }
+
+  save () {
+    localStorage.setItem('tile', JSON.stringify(this.tiles.map(t => t.frame)))
   }
 
   _applyGravityToIndex (index, holes) {
@@ -110,12 +114,13 @@ export default class TileService {
     return result
   }
 
-  _setupGrid () {
+  _setupGrid (data) {
     this.tiles = []
     this.allTiles
       .slice(0, window.gridDim * window.gridDim)
       .forEach((tile, index) => {
-        let frame = this._getRandomType() + 1
+        const randomType = this._getRandomType() + 1
+        let frame = typeof data[index] === 'number' ? data[index] : randomType
         if (frame > NUM_FRAMES - 1) {
           frame = NUM_FRAMES - 1
         }

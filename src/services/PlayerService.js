@@ -17,157 +17,174 @@ export default class PlayerService {
     this.state = 0
   }
 
-  init (gameService) {
+  init (gameService, data) {
     this.uiService = gameService.uiService
     this.tileService = gameService.tileService
 
-    this.level = 1
-    this._totalExperience = 0
-    this._experience = 0
+    if (data) {
+      this.data = data
+    } else {
+      this.data = {}
 
-    this.strength = 1
-    this.dexterity = 1
-    this.vitality = 1
-    this.luck = 1
-    this.items = [3, 2, 1, 1]
+      this.data.level = 1
+      this.data._totalExperience = 0
+      this.data._experience = 0
 
-    this._totalArmor = 0
-    this._armor = this.maxArmor
-    this._totalUpgrades = 0
-    this._upgradeProgress = 0
+      this.data.strength = 1
+      this.data.dexterity = 1
+      this.data.vitality = 1
+      this.data.luck = 1
+      this.data.items = [3, 2, 1, 1]
 
-    this._totalGold = 0
-    this._gold = 0
-    this._totalItems = 0
+      this.data._totalArmor = 0
+      this.data._armor = this.maxArmor
+      this.data._totalUpgrades = 0
+      this.data._upgradeProgress = 0
 
-    this._totalPotions = 0
-    this._health = this.maxHealth
+      this.data._totalGold = 0
+      this.data._gold = 0
+      this.data._totalItems = 0
+
+      this.data._totalPotions = 0
+      this.data._health = this.maxHealth
+    }
   }
 
   set health (newHealth) {
-    this._totalPotions += newHealth - this._health
-    this._health = newHealth
-    if (this._health > this.maxHealth) {
-      this._health = this.maxHealth
+    const change = newHealth - this.data._health
+    if (change > 0) {
+      this.data._totalPotions += change
     }
-    if (this._health <= 0) {
+    this.data._health = newHealth
+    if (this.data._health > this.maxHealth) {
+      this.data._health = this.maxHealth
+    }
+    if (this.data._health <= 0) {
       this.game.state.start('GameOver')
-      this._health = 0
+      localStorage.removeItem('player')
+      localStorage.removeItem('tile')
+      this.data._health = 0
     }
 
     this.uiService.update()
   }
 
   set armor (newArmor) {
-    this._totalArmor += newArmor - this._armor
-    if (newArmor > this._armor) {
-      let incomingArmor = newArmor - this._armor
-      let armor = this._armor
-      this._armor += incomingArmor
+    const change = newArmor - this.data._armor
+    if (change > 0) {
+      this.data._totalArmor += change
+    }
+    if (newArmor > this.data._armor) {
+      let incomingArmor = newArmor - this.data._armor
+      let armor = this.data._armor
+      this.data._armor += incomingArmor
       incomingArmor -= this.maxArmor - armor
       if (incomingArmor > 0) {
         this.upgrade += incomingArmor
-        this._armor = this.maxArmor
+        this.data._armor = this.maxArmor
       } else {
-        this._armor = newArmor
+        this.data._armor = newArmor
       }
       return
     }
 
-    let incomingDamage = this._armor - newArmor
-    this._armor -= incomingDamage
+    let incomingDamage = this.data._armor - newArmor
+    this.data._armor -= incomingDamage
     incomingDamage = 0
 
-    if (this._armor < 0) {
-      this._armor = 0
+    if (this.data._armor < 0) {
+      this.data._armor = 0
     }
 
     this.uiService.update()
   }
 
   set gold (newGold) {
-    this._totalGold += newGold - this._gold
-    this._gold = newGold
+    const change = newGold - this.data._gold
+    if (change > 0) {
+      this.data._totalGold += change
+    }
+    this.data._gold = newGold
 
     if (newGold >= this.maxGold) {
-      this._totalItems++
+      this.data._totalItems++
       this.state = 1
-      this._gold = 0
+      this.data._gold = 0
     }
 
     this.uiService.update()
   }
 
   set upgrade (newUpgrade) {
-    this._upgradeProgress = newUpgrade
-    if (this._upgradeProgress >= this.maxUpgrade) {
-      this._totalUpgrades++
+    this.data._upgradeProgress = newUpgrade
+    if (this.data._upgradeProgress >= this.maxUpgrade) {
+      this.data._totalUpgrades++
       this.upgrades++
       this.state = 2
-      this._upgradeProgress = 0
+      this.data._upgradeProgress = 0
     }
 
     this.uiService.update()
   }
 
   set experience (newExperience) {
-    this._totalExperience += newExperience - this._experience
-    this._experience = newExperience
-    if (this._experience >= this.maxExperience) {
-      this._totalUpgrades++
+    this.data._totalExperience += newExperience - this.data._experience
+    this.data._experience = newExperience
+    if (this.data._experience >= this.maxExperience) {
+      this.data._totalUpgrades++
       this.state = 3
-      this._experience = 0
+      this.data._experience = 0
     }
 
     this.uiService.update()
   }
 
   get health () {
-    return this._health
+    return this.data._health
   }
 
   get armor () {
-    return this._armor
+    return this.data._armor
   }
 
   get gold () {
-    return this._gold
+    return this.data._gold
   }
 
   get upgrade () {
-    return this._upgradeProgress
+    return this.data._upgradeProgress
   }
 
   get experience () {
-    return this._experience
+    return this.data._experience
   }
 
   get maxHealth () {
-    return 50 + 10 * this.dexterity - 10
+    return 50 + 10 * this.data.dexterity - 10
   }
 
   get maxArmor () {
-    return this.items[1] + this.items[2] + this.items[3]
+    return this.data.items[1] + this.data.items[2] + this.data.items[3]
   }
 
   get maxGold () {
-    return 50 + 1 * this.luck - 1
+    return 50 + 1 * this.data.luck - 1
   }
 
   get maxUpgrade () {
-    return 50 + 1 * this.dexterity - 1
+    return 50 + 1 * this.data.dexterity - 1
   }
 
   get maxExperience () {
-    return 50 + 1 * this.level - 1
+    return 50 + 1 * this.data.level - 1
   }
 
   get baseDamage () {
-    return 4 + this.strength * 1
+    return 4 + this.data.strength * 1
   }
 
   get weaponDamage () {
-    return this.items[0]
+    return this.data.items[0]
   }
 
   updateResources (tiles) {
@@ -248,6 +265,10 @@ export default class PlayerService {
     const data = datum[this.state - 1]
     const title = titles[this.state - 1]
     return data && title ? { data, title } : null
+  }
+
+  save () {
+    localStorage.setItem('player', JSON.stringify(this.data))
   }
 
   // xp per kill
