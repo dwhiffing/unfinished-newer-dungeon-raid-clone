@@ -56,6 +56,7 @@ module.exports = {
       hash: true
     }),
     new CopyWebpackPlugin([{ from: 'assets/images', to: 'assets/images' }]),
+    new CopyWebpackPlugin([{ from: 'assets/icons', to: 'assets/icons' }]),
     new CopyWebpackPlugin([{ from: 'manifest.json' }]),
     new CopyWebpackPlugin([{ from: 'favicon.ico' }])
   ],
