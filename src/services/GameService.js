@@ -13,6 +13,14 @@ export default class GameService {
     this.visited = []
     this.state = state
 
+    let tileData = null
+    let playerData = null
+
+    try {
+      tileData = JSON.parse(localStorage.getItem('tile'))
+      playerData = JSON.parse(localStorage.getItem('player'))
+    } catch (e) {}
+
     this.allowInput = this.allowInput.bind(this)
     this.game.input.onDown.add(this.onPress, this)
 
@@ -20,8 +28,8 @@ export default class GameService {
     this.tileService = new TileService()
     this.playerService = new PlayerService()
 
-    this.tileService.init(this, JSON.parse(localStorage.getItem('tile')))
-    this.playerService.init(this, JSON.parse(localStorage.getItem('player')))
+    this.tileService.init(this, tileData)
+    this.playerService.init(this, playerData)
 
     this.damageService = new DamageService(this)
 

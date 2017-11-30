@@ -120,7 +120,8 @@ export default class TileService {
       .slice(0, window.gridDim * window.gridDim)
       .forEach((tile, index) => {
         const randomType = this._getRandomType() + 1
-        let frame = typeof data[index] === 'number' ? data[index] : randomType
+        let frame =
+          data && typeof data[index] === 'number' ? data[index] : randomType
         if (frame > NUM_FRAMES - 1) {
           frame = NUM_FRAMES - 1
         }
