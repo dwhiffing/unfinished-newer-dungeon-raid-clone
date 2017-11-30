@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 
 const ANIMATION_DURATION = 180
+const EXTRA = 3
 
 // Enemy Sword Shield Potion Gold
 
@@ -38,7 +39,7 @@ export default class extends Phaser.Sprite {
     this.reset(index % window.gridDim, type)
     this.position = {
       x: (index % window.gridDim) * window.tileSize + window.tileSize / 2,
-      y: -_y * window.tileSize + window.tileSize / 2
+      y: -_y * window.tileSize + window.tileSize / 2 - window.tileSize * EXTRA
     }
     const { x, y } = this._getCoordsFromIndex(index)
     this.coordinate = new Phaser.Point(x, y)
@@ -47,7 +48,7 @@ export default class extends Phaser.Sprite {
     const duration =
       ANIMATION_DURATION * holes * (Math.abs(this.y - 1000) / 1000)
 
-    return this.tween(this.y + holes * window.tileSize, duration)
+    return this.tween(this.y + (holes + EXTRA) * window.tileSize, duration)
   }
 
   setIndex (index) {
