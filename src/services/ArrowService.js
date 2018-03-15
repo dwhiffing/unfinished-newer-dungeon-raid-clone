@@ -13,32 +13,26 @@ export default class ArrowService {
   }
 
   update (position, tiles, damage) {
-    if (JSON.stringify(tiles.map(t => t.index)) === this.tileIndexes) {
+    if (this._stringifyTiles(tiles) === this.tileIndexes) {
       return
+    } else {
+      this.tileIndexes = this._stringifyTiles(tiles)
     }
 
     this.clear()
-    this.tileIndexes = JSON.stringify(tiles.map(t => t.index))
 
-    this.updateDamage(damage, position)
-
-    tiles.forEach((tile, index) => {
-      if (index === 0) {
-        window.navigator.vibrate(10)
-        return
-      }
-
-      this._createArrow(tiles[index], tiles[index - 1])
-    })
-  }
-
-  updateDamage (damage, position) {
     if (damage > 0) {
       this.damageText.alpha = 1
       this.damageText.text = `${damage} DMG`
       this.damageText.x = position.x
       this.damageText.y = position.y - 80
     }
+
+    tiles.forEach((tile, index) => {
+      if (index > 0) {
+        this._createArrow(tiles[index], tiles[index - 1])
+      }
+    })
   }
 
   clear () {
@@ -70,5 +64,9 @@ export default class ArrowService {
         }
       }
     }
+  }
+
+  _stringifyTiles (tiles) {
+    return JSON.stringify(tiles.map(t => t.index))
   }
 }

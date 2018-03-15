@@ -12,14 +12,14 @@ const titles = ['Shop!', 'Upgrade!', 'Level Up!']
 // Wizard - Low damage to all enemies
 
 export default class PlayerService {
-  constructor () {
-    this.game = window.game
+  constructor (game) {
+    this.game = game
     this.state = 0
   }
 
-  init (gameService, data) {
-    this.uiService = gameService.uiService
-    this.tileService = gameService.tileService
+  init (data, updateStatsCallback, gameOverCallback) {
+    this.updateStatsCallback = updateStatsCallback
+    this.gameOverCallback = gameOverCallback
 
     if (data) {
       this.data = data
@@ -63,43 +63,35 @@ export default class PlayerService {
     }
 
     if (this.data._health <= 0) {
-      this.game.state.start('GameOver')
-      localStorage.removeItem('player')
-      localStorage.removeItem('tile')
       this.data._health = 0
+      this.gameOverCallback()
     }
 
-    this.uiService.update()
+    this.updateStatsCallback(this.getStats())
   }
 
   set armor (newArmor) {
-    const change = newArmor - this.data._armor
-    if (change > 0) {
-      this.data._totalArmor += change
-    }
-    if (newArmor > this.data._armor) {
-      let incomingArmor = newArmor - this.data._armor
-      let armor = this.data._armor
+    const previousArmor = this.data._armor
+    let incomingArmor = newArmor - this.data._armor
+
+    if (incomingArmor > 0) {
+      this.data._totalArmor += incomingArmor
       this.data._armor += incomingArmor
-      incomingArmor -= this.maxArmor - armor
+
+      incomingArmor -= this.maxArmor - previousArmor
+
       if (incomingArmor > 0) {
         this.upgrade += incomingArmor
         this.data._armor = this.maxArmor
-      } else {
-        this.data._armor = newArmor
       }
-      return
+    } else {
+      this.data._armor -= this.data._armor - newArmor
+      if (this.data._armor < 0) {
+        this.data._armor = 0
+      }
     }
 
-    let incomingDamage = this.data._armor - newArmor
-    this.data._armor -= incomingDamage
-    incomingDamage = 0
-
-    if (this.data._armor < 0) {
-      this.data._armor = 0
-    }
-
-    this.uiService.update()
+    this.updateStatsCallback(this.getStats())
   }
 
   set gold (newGold) {
@@ -116,7 +108,7 @@ export default class PlayerService {
       this.data._gold = 0
     }
 
-    this.uiService.update()
+    this.updateStatsCallback(this.getStats())
   }
 
   set upgrade (newUpgrade) {
@@ -129,7 +121,7 @@ export default class PlayerService {
       this.data._upgradeProgress = 0
     }
 
-    this.uiService.update()
+    this.updateStatsCallback(this.getStats())
   }
 
   set experience (newExperience) {
@@ -142,7 +134,7 @@ export default class PlayerService {
       this.data._experience = 0
     }
 
-    this.uiService.update()
+    this.updateStatsCallback(this.getStats())
   }
 
   get health () {
@@ -193,61 +185,13 @@ export default class PlayerService {
     return this.data.items[0]
   }
 
-  updateResources (tiles) {
-    let gold = 0
-    let potion = 0
-    let armor = 0
-    let experience = 0
-    let sword = 0
-
-    tiles.forEach(tile => {
-      if (tile.frame === 0) {
-        return
-      }
-      this.tileService.destroyTile(tile.index)
-      if (tile.frame === 4) {
-        gold++
-      } else if (tile.frame === 3) {
-        potion++
-      } else if (tile.frame === 2) {
-        armor++
-      } else if (tile.frame === 1) {
-        sword++
-      }
-    })
-
-    tiles.forEach(tile => {
-      if (tile.frame === 0) {
-        tile.unpick()
-        let totalDamage = this.baseDamage + this.weaponDamage * sword
-
-        if (tile.armor - totalDamage < 0) {
-          totalDamage -= tile.armor
-          tile.armor = 0
-        } else {
-          tile.armor -= totalDamage
-          return
-        }
-
-        if (totalDamage > 0) {
-          tile.hp -= totalDamage
-
-          if (tile.hp <= 0) {
-            experience++
-            this.tileService.destroyTile(tile.index)
-          }
-        }
-
-        tile.updateUI()
-      }
-    })
-
+  update ({ gold = 0, potion = 0, armor = 0, experience = 0 }) {
     this.gold += gold
     this.health += potion
     this.armor += armor
     this.experience += experience
 
-    this.uiService.update()
+    this.updateStatsCallback(this.getStats())
   }
 
   getStats () {
@@ -276,15 +220,4 @@ export default class PlayerService {
   save () {
     localStorage.setItem('player', JSON.stringify(this.data))
   }
-
-  // xp per kill
-  // Bonus XP chance
-  // Armor piercing
-  // Armor per shield
-  // Bonus armor chance
-  // Armor durability
-  // hp per potion
-  // Bonus potion chance
-  // gold per coin
-  // Bonus coin chance
 }

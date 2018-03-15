@@ -2,6 +2,7 @@ export default class UIService {
   constructor (game, x, y) {
     this.game = game
     this.group = this.game.add.group()
+    this.update = this.update.bind(this)
 
     this.footer = game.add.graphics(0, 0)
     this.footer.beginFill(0x222222)
@@ -12,12 +13,11 @@ export default class UIService {
     this.group.add(this.footer)
   }
 
-  init (gameService, _x) {
-    this.playerService = gameService.playerService
+  init (_x, _y, stats) {
     this.textGroup = this.game.add.group()
     const x =
-      window.game.width >= window.gridSize ? window.gridSize : window.game.width
-    const y = window.game.height
+      this.game.width >= window.gridSize ? window.gridSize : this.game.width
+    const y = this.game.height
 
     const gold = this._initText(70, y - 40, '0/50', '#ffff00', 32)
     const health = this._initText(x - 70, y - 40, '50/50', '#ff0000', 32)
@@ -39,12 +39,12 @@ export default class UIService {
     this.group.add(this.textGroup)
 
     this.texts = { gold, health, armor, base, weapon, upgrade, experience }
-    this.update()
+    this.update(stats)
   }
 
   drawHeader () {
-    const x = window.game.width
-    this.header = window.game.add.graphics(0, 0)
+    const x = this.game.width
+    this.header = this.game.add.graphics(0, 0)
     this.header.beginFill(0x222222)
     this.header.drawRect(0, 0, x, 120)
     this.header.beginFill(0x888888)
@@ -55,19 +55,18 @@ export default class UIService {
     text.events.onInputUp.add(() => this.game.state.start('GameOver'))
   }
 
-  update () {
-    const data = this.playerService.getStats()
-    this.texts.gold.text = `${data.gold}/${data.maxGold}`
-    this.texts.health.text = `${data.health}/${data.maxHealth}`
-    this.texts.armor.text = `${data.armor}/${data.maxArmor}`
-    this.texts.upgrade.text = `${data.upgrade}/${data.maxUpgrade}`
-    this.texts.experience.text = `${data.experience}/${data.maxExperience}`
-    this.texts.weapon.text = `${data.weapon}`
-    this.texts.base.text = `${data.base}`
+  update (stats) {
+    this.texts.gold.text = `${stats.gold}/${stats.maxGold}`
+    this.texts.health.text = `${stats.health}/${stats.maxHealth}`
+    this.texts.armor.text = `${stats.armor}/${stats.maxArmor}`
+    this.texts.upgrade.text = `${stats.upgrade}/${stats.maxUpgrade}`
+    this.texts.experience.text = `${stats.experience}/${stats.maxExperience}`
+    this.texts.weapon.text = `${stats.weapon}`
+    this.texts.base.text = `${stats.base}`
   }
 
   _initText (x, y, string, fill, size) {
-    const state = window.game.state.states[window.game.state.current]
+    const state = this.game.state.states[this.game.state.current]
     const text = state.add.text(x, y, string)
     text.padding.set(10, 16)
     text.anchor.setTo(0.5)

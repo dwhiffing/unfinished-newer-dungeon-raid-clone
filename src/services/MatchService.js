@@ -1,13 +1,15 @@
 export default class MatchService {
-  constructor (gameService) {
-    this.game = window.game
-    this.tileService = gameService.tileService
+  constructor (game) {
+    this.game = game
     this.path = []
     this.match = []
   }
 
-  selectTile (position) {
-    const tile = this.tileService.getTile(position)
+  init (tiles) {
+    this.tiles = tiles
+  }
+
+  selectTile (tile) {
     if (!tile || this._checkForDeselect(tile) || tile.picked) {
       return
     }
@@ -27,12 +29,12 @@ export default class MatchService {
 
   resolveMatch () {
     if (this.path.length < 3) {
-      this.path.forEach(t => this.tileService.tiles[t].unpick())
+      this.path.forEach(t => this.tiles[t].unpick())
       return false
     }
 
     for (let i = 0; i < this.path.length; i++) {
-      const tile = this.tileService.tiles[this.path[i]]
+      const tile = this.tiles[this.path[i]]
       this.match.push(tile)
     }
 
@@ -43,7 +45,7 @@ export default class MatchService {
     const match = this.match.concat([])
     this.path = []
     this.match = []
-    this.tileService.tiles.forEach(t => {
+    this.tiles.forEach(t => {
       t.alpha = 1
     })
 
@@ -51,7 +53,11 @@ export default class MatchService {
   }
 
   getTilesInMatch () {
-    return this.path.map(t => this.tileService.tiles[t])
+    return this.path.map(t => this.tiles[t])
+  }
+
+  getDyingEnemies (damage, tiles = this.getTilesInMatch()) {
+    return tiles.filter(t => t.frame === 0 && t.armor + t.hp - damage <= 0)
   }
 
   _select (tile) {
@@ -71,11 +77,11 @@ export default class MatchService {
     if (this.path.length < n) {
       return
     }
-    return this.tileService.tiles[this.path[this.path.length - n]]
+    return this.tiles[this.path[this.path.length - n]]
   }
 
   _highlightMatchingTiles (frame) {
-    this.tileService.tiles.forEach(t => {
+    this.tiles.forEach(t => {
       if (frame === 0 || frame === 1) {
         if (t.frame > 1) {
           t.alpha = 0.5
@@ -88,8 +94,12 @@ export default class MatchService {
 
   _isValidMatch (tile, last) {
     return (
-      this.tileService._checkAdjacent(tile.coordinate, last.coordinate) &&
+      this._checkAdjacent(tile.coordinate, last.coordinate) &&
       (tile.frame === last.frame || (tile.frame < 2 && last.frame < 2))
     )
+  }
+
+  _checkAdjacent (p1, p2) {
+    return Math.abs(p1.x - p2.x) <= 1 && Math.abs(p1.y - p2.y) <= 1
   }
 }

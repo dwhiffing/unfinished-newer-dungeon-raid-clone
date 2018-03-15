@@ -1,13 +1,13 @@
 import Tile from './Tile'
 
 export default class extends Tile {
-  constructor ({ game }) {
-    super({ game })
-
-    this.hpText = this._initText(game, 35, 30, `${this.hp}`, '#ff0000')
-    this.indexText = this._initText(game, -13, -13, '', '#dddddd')
-    this.damageText = this._initText(game, 35, -10, `${this.damage}`, '#ffffff')
-    this.armorText = this._initText(game, 35, 5, `${this.armor}`, '#eeeeee')
+  constructor (game) {
+    super({ game: game })
+    this.addText = (x, y, string) => game.add.text(x, y, string)
+    this.hpText = this._initText(35, 30, `${this.hp}`, '#ff0000')
+    this.indexText = this._initText(-13, -13, '', '#dddddd')
+    this.damageText = this._initText(35, -10, `${this.damage}`, '#ffffff')
+    this.armorText = this._initText(35, 5, `${this.armor}`, '#eeeeee')
     this.texts = [this.hpText, this.damageText, this.armorText]
     this.level = 1
 
@@ -50,8 +50,8 @@ export default class extends Tile {
     this.hp = level * 4
   }
 
-  _initText (game, x, y, string, fill) {
-    const text = game.add.text(x, y, string)
+  _initText (x, y, string, fill) {
+    const text = this.addText(x, y, string)
     text.padding.set(10, 16)
     text.fontSize = 14
     text.anchor.setTo(0.5)

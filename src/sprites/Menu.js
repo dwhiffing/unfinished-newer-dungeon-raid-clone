@@ -2,7 +2,7 @@ import Phaser from 'phaser'
 import Upgrade from './Upgrade'
 
 export default class Menu {
-  constructor ({ game }) {
+  constructor (game, x, y) {
     this.game = game
 
     this.group = game.add.group()
@@ -17,8 +17,8 @@ export default class Menu {
     this.group.alpha = 0
     this.group.scale.setTo(window.ratio)
     this.group.position = {
-      x: this.game.width / 2 - this.group.width / 2,
-      y: this.game.height / 2 - this.group.height / 2
+      x: x - this.group.width / 2,
+      y: y - this.group.height / 2
     }
 
     this.upgrades = []

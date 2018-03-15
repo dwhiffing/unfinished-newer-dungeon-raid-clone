@@ -3,11 +3,10 @@ import Enemy from '../sprites/Enemy'
 const NUM_FRAMES = 5
 
 export default class TileService {
-  constructor (gameService, x, y) {
-    this.game = window.game
+  constructor (game, x, y) {
+    this.game = game
     this.group = this.game.add.group()
-    this.group.x = x
-    this.group.y = y
+    this.group.position.setTo(x, y)
     this.allTiles = []
 
     while (this.allTiles.length < 100) {
@@ -15,8 +14,7 @@ export default class TileService {
     }
   }
 
-  init (gameService, data) {
-    this.gameService = gameService
+  init (data) {
     this._setupGrid(data)
   }
 
@@ -131,7 +129,7 @@ export default class TileService {
   }
 
   _createTile () {
-    const tile = new Enemy({ game: this.game })
+    const tile = new Enemy(this.game)
     this.allTiles.push(tile)
     this.group.add(tile)
 
@@ -140,9 +138,5 @@ export default class TileService {
 
   _getRandomType () {
     return Math.floor(Math.random() * NUM_FRAMES)
-  }
-
-  _checkAdjacent (p1, p2) {
-    return Math.abs(p1.x - p2.x) <= 1 && Math.abs(p1.y - p2.y) <= 1
   }
 }
