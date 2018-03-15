@@ -38,9 +38,7 @@ export default class GameService {
 
     this.uiService.init(this, x, y)
 
-    this.arrowService = new ArrowService(this.game, x, y, () => {
-      this.damageService.attacks.forEach(t => t.destroy())
-    })
+    this.arrowService = new ArrowService(this.game, x, y)
 
     this.matchService = new MatchService(this, x, y)
 
@@ -59,6 +57,8 @@ export default class GameService {
   onMove ({ position }) {
     const tiles = this.matchService.getTilesInMatch()
     let damage = 0
+
+    this.damageService.clear()
 
     if (tiles[0].frame <= 1 && tiles.length >= 3) {
       const swords = tiles.reduce((s, t) => s + (t.frame === 1 ? 1 : 0), 0)
@@ -80,6 +80,7 @@ export default class GameService {
     this.game.input.deleteMoveCallback(this.onMove, this)
 
     this.arrowService.clear()
+    this.damageService.clear()
 
     const match = this.matchService.resolveMatch()
     if (match) {

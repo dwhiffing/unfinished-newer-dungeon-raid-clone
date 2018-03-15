@@ -72,6 +72,10 @@ export default class DamageService {
     })
   }
 
+  clear () {
+    this.attacks.forEach(t => t.destroy())
+  }
+
   _showOverlay () {
     return new Promise(resolve => {
       const tween = this.game.add

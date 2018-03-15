@@ -1,16 +1,12 @@
 import Phaser from 'phaser'
 
 export default class ArrowService {
-  constructor (game, x, y, clearCallback) {
+  constructor (game, x, y) {
     this.addSprite = (x, y) => game.add.sprite(x, y, 'arrows')
-    this.clearCallback = clearCallback
     this.update = this.update.bind(this)
 
     this.group = game.add.group()
-    this.group.x = x
-    this.group.y = y
-    this.group.alpha = 0.9
-
+    this.group.position.setTo(x, y)
     this.damageText = game.add.text(0, 0, 'dmg')
 
     this.clear()
@@ -24,12 +20,7 @@ export default class ArrowService {
     this.clear()
     this.tileIndexes = JSON.stringify(tiles.map(t => t.index))
 
-    if (damage > 0) {
-      this.damageText.alpha = 1
-      this.damageText.text = `${damage} DMG`
-      this.damageText.x = position.x
-      this.damageText.y = position.y - 80
-    }
+    this.updateDamage(damage, position)
 
     tiles.forEach((tile, index) => {
       if (index === 0) {
@@ -41,12 +32,20 @@ export default class ArrowService {
     })
   }
 
+  updateDamage (damage, position) {
+    if (damage > 0) {
+      this.damageText.alpha = 1
+      this.damageText.text = `${damage} DMG`
+      this.damageText.x = position.x
+      this.damageText.y = position.y - 80
+    }
+  }
+
   clear () {
     this.tileIndexes = null
     this.group.removeAll(true)
     this.damageText.fill = '#f00'
     this.damageText.alpha = 0
-    this.clearCallback()
     this.arrows = []
   }
 
