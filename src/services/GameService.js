@@ -13,6 +13,9 @@ export default class GameService {
     this.visited = []
     this.state = state
 
+    const x = window.leftBuffer
+    const y = window.topBuffer
+
     let tileData = null
     let playerData = null
 
@@ -24,19 +27,19 @@ export default class GameService {
     this.allowInput = this.allowInput.bind(this)
     this.game.input.onDown.add(this.onPress, this)
 
-    this.uiService = new UIService()
-    this.tileService = new TileService()
-    this.playerService = new PlayerService()
+    this.uiService = new UIService(this, x, y)
+    this.tileService = new TileService(this, x, y)
+    this.playerService = new PlayerService(this, x, y)
 
     this.tileService.init(this, tileData)
     this.playerService.init(this, playerData)
 
-    this.damageService = new DamageService(this)
+    this.damageService = new DamageService(this, x, y)
 
-    this.uiService.init(this)
+    this.uiService.init(this, x, y)
 
-    this.arrowService = new ArrowService(this)
-    this.matchService = new MatchService(this)
+    this.arrowService = new ArrowService(this, x, y)
+    this.matchService = new MatchService(this, x, y)
 
     this.menu = new Menu({ game: this.game })
   }

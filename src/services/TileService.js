@@ -3,11 +3,11 @@ import Enemy from '../sprites/Enemy'
 const NUM_FRAMES = 5
 
 export default class TileService {
-  constructor () {
+  constructor (gameService, x, y) {
     this.game = window.game
     this.group = this.game.add.group()
-    this.group.x = window.leftBuffer
-    this.group.y = window.topBuffer
+    this.group.x = x
+    this.group.y = y
     this.allTiles = []
 
     while (this.allTiles.length < 100) {

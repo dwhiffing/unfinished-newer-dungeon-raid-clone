@@ -55,10 +55,13 @@ export default class PlayerService {
     if (change > 0) {
       this.data._totalPotions += change
     }
+
     this.data._health = newHealth
+
     if (this.data._health > this.maxHealth) {
       this.data._health = this.maxHealth
     }
+
     if (this.data._health <= 0) {
       this.game.state.start('GameOver')
       localStorage.removeItem('player')

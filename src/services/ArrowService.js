@@ -1,15 +1,15 @@
 import Phaser from 'phaser'
 
 export default class ArrowService {
-  constructor (gameService) {
+  constructor (gameService, x, y) {
     this.game = window.game
     this.playerService = gameService.playerService
     this.damageService = gameService.damageService
     this.update = this.update.bind(this)
 
     this.group = this.game.add.group()
-    this.group.x = window.leftBuffer
-    this.group.y = window.topBuffer
+    this.group.x = x
+    this.group.y = y
     this.group.alpha = 0.9
 
     this.damageText = this.game.add.text(0, 0, 'dmg')

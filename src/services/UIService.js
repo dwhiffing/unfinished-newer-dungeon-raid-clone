@@ -14,7 +14,7 @@ export default class UIService {
     this.group.add(this.footer)
   }
 
-  init (gameService) {
+  init (gameService, _x) {
     this.state = gameService.state
     this.playerService = gameService.playerService
     this.textGroup = this.game.add.group()
@@ -35,7 +35,7 @@ export default class UIService {
     this.textGroup.add(weapon)
     this.textGroup.add(upgrade)
     this.textGroup.add(experience)
-    this.textGroup.x = window.leftBuffer + 5
+    this.textGroup.x = _x + 5
 
     this.group.add(this.textGroup)
 
