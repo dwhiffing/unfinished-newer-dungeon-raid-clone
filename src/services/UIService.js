@@ -1,11 +1,9 @@
 export default class UIService {
-  constructor () {
-    this.game = window.game
+  constructor (game, x, y) {
+    this.game = game
     this.group = this.game.add.group()
-    const x = window.game.width
-    const y = window.game.height
 
-    this.footer = window.game.add.graphics(0, 0)
+    this.footer = game.add.graphics(0, 0)
     this.footer.beginFill(0x222222)
     this.footer.drawRect(0, y - 115, x, y)
     this.footer.beginFill(0x888888)
@@ -15,12 +13,12 @@ export default class UIService {
   }
 
   init (gameService, _x) {
-    this.state = gameService.state
     this.playerService = gameService.playerService
     this.textGroup = this.game.add.group()
     const x =
       window.game.width >= window.gridSize ? window.gridSize : window.game.width
     const y = window.game.height
+
     const gold = this._initText(70, y - 40, '0/50', '#ffff00', 32)
     const health = this._initText(x - 70, y - 40, '50/50', '#ff0000', 32)
     const armor = this._initText(x / 2, y - 70, '0/4', '#6562F0', 18)
@@ -28,6 +26,7 @@ export default class UIService {
     const weapon = this._initText(x / 2 + 60, y - 70, '+3', '#ffffff', 18)
     const upgrade = this._initText(x / 2, y - 40, '0/100', '#6562F0', 24)
     const experience = this._initText(x / 2, y - 10, '0/100', '#00ff00', 24)
+
     this.textGroup.add(gold)
     this.textGroup.add(health)
     this.textGroup.add(armor)

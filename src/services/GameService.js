@@ -27,7 +27,7 @@ export default class GameService {
     this.allowInput = this.allowInput.bind(this)
     this.game.input.onDown.add(this.onPress, this)
 
-    this.uiService = new UIService(this, x, y)
+    this.uiService = new UIService(this.game, this.game.width, this.game.height)
     this.tileService = new TileService(this, x, y)
     this.playerService = new PlayerService(this, x, y)
 
@@ -38,7 +38,10 @@ export default class GameService {
 
     this.uiService.init(this, x, y)
 
-    this.arrowService = new ArrowService(this, x, y)
+    this.arrowService = new ArrowService(this.game, x, y, () => {
+      this.damageService.attacks.forEach(t => t.destroy())
+    })
+
     this.matchService = new MatchService(this, x, y)
 
     this.menu = new Menu({ game: this.game })
@@ -54,8 +57,22 @@ export default class GameService {
   }
 
   onMove ({ position }) {
+    const tiles = this.matchService.getTilesInMatch()
+    let damage = 0
+
+    if (tiles[0].frame <= 1 && tiles.length >= 3) {
+      const swords = tiles.reduce((s, t) => s + (t.frame === 1 ? 1 : 0), 0)
+      damage =
+        this.playerService.weaponDamage * swords + this.playerService.baseDamage
+      const dyingEnemies = tiles.filter(
+        t => t.frame === 0 && t.armor + t.hp - damage <= 0
+      )
+
+      this.damageService.showDyingEnemies(dyingEnemies)
+    }
+
     this.matchService.selectTile(position)
-    this.arrowService.update(position, this.matchService.getTilesInMatch())
+    this.arrowService.update(position, tiles, damage)
   }
 
   onRelease () {
