@@ -32,6 +32,7 @@
     "webpack": "^3.4.1"
   },
   "dependencies": {
+    "lodash": "^4.17.5",
     "phaser-ce": "^2.8.3",
     "webfontloader": "^1.6.28"
   }
