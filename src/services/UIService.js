@@ -15,44 +15,24 @@ export default class UIService {
 
   init (_x, _y, stats) {
     this.textGroup = this.game.add.group()
-    const x =
-      this.game.width >= window.gridSize ? window.gridSize : this.game.width
-    const y = this.game.height
 
-    const gold = this._initText(70, y - 40, '0/50', '#ffff00', 32)
-    const health = this._initText(x - 70, y - 40, '50/50', '#ff0000', 32)
-    const armor = this._initText(x / 2, y - 70, '0/4', '#6562F0', 18)
-    const base = this._initText(x / 2 - 60, y - 70, '+5', '#ffffff', 18)
-    const weapon = this._initText(x / 2 + 60, y - 70, '+3', '#ffffff', 18)
-    const upgrade = this._initText(x / 2, y - 40, '0/100', '#6562F0', 24)
-    const experience = this._initText(x / 2, y - 10, '0/100', '#00ff00', 24)
+    const { width, height } = this.game
+    const x = width >= window.gridSize ? window.gridSize : width
+    const y = height
 
-    this.textGroup.add(gold)
-    this.textGroup.add(health)
-    this.textGroup.add(armor)
-    this.textGroup.add(base)
-    this.textGroup.add(weapon)
-    this.textGroup.add(upgrade)
-    this.textGroup.add(experience)
+    this.texts = {
+      gold: this._initText(70, y - 40, '0/50', '#ffff00', 32),
+      health: this._initText(x - 70, y - 40, '50/50', '#ff0000', 32),
+      armor: this._initText(x / 2, y - 70, '0/4', '#6562F0', 18),
+      base: this._initText(x / 2 - 60, y - 70, '+5', '#ffffff', 18),
+      weapon: this._initText(x / 2 + 60, y - 70, '+3', '#ffffff', 18),
+      upgrade: this._initText(x / 2, y - 40, '0/100', '#6562F0', 24),
+      experience: this._initText(x / 2, y - 10, '0/100', '#00ff00', 24)
+    }
+
     this.textGroup.x = _x + 5
-
     this.group.add(this.textGroup)
-
-    this.texts = { gold, health, armor, base, weapon, upgrade, experience }
     this.update(stats)
-  }
-
-  drawHeader () {
-    const x = this.game.width
-    this.header = this.game.add.graphics(0, 0)
-    this.header.beginFill(0x222222)
-    this.header.drawRect(0, 0, x, 120)
-    this.header.beginFill(0x888888)
-    this.header.drawRect(0, 115, x, 5)
-
-    const text = this._initText(x / 2 + 5, 60, 'Dungeon Raid', '#77BFA3', 40)
-    text.inputEnabled = true
-    text.events.onInputUp.add(() => this.game.state.start('GameOver'))
   }
 
   update (stats) {
@@ -61,8 +41,8 @@ export default class UIService {
     this.texts.armor.text = `${stats.armor}/${stats.maxArmor}`
     this.texts.upgrade.text = `${stats.upgrade}/${stats.maxUpgrade}`
     this.texts.experience.text = `${stats.experience}/${stats.maxExperience}`
-    this.texts.weapon.text = `${stats.weapon}`
-    this.texts.base.text = `${stats.base}`
+    this.texts.weapon.text = `${stats.weaponDamage}`
+    this.texts.base.text = `${stats.baseDamage}`
   }
 
   _initText (x, y, string, fill, size) {
@@ -72,6 +52,7 @@ export default class UIService {
     text.anchor.setTo(0.5)
     text.fontSize = size
     text.fill = fill
+    this.textGroup.add(text)
     return text
   }
 }
