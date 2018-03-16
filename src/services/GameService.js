@@ -20,6 +20,8 @@ export default class GameService {
     _x = window.leftBuffer
     _y = window.topBuffer
 
+    this.shouldVibrate = false
+
     this.allowInput = this.allowInput.bind(this)
     this._getHurt = this._getHurt.bind(this)
 
@@ -55,7 +57,7 @@ export default class GameService {
     this.damageService.update(this.matchService.getDyingEnemies(damage))
 
     if (tiles.length < 2) {
-      window.navigator.vibrate(10)
+      this._vibrate(10)
     } else {
       this.arrowService.update(position, tiles, damage)
     }
@@ -152,12 +154,18 @@ export default class GameService {
     }
   }
 
+  _vibrate (n) {
+    if (window.navigator.vibrate && this.shouldVibrate) {
+      window.navigator.vibrate(n)
+    }
+  }
+
   _getHurt (damage, type) {
     if (type === 'armor') {
-      window.navigator.vibrate(50)
+      this._vibrate(50)
       this.playerService.armor -= damage
     } else if (type === 'health') {
-      window.navigator.vibrate(200)
+      this._vibrate(200)
       this.playerService.health -= damage
     }
   }
@@ -179,7 +187,7 @@ export default class GameService {
 
     this.playerService.init(playerData, this.uiService.update)
     this.tileService.init(tileData)
-    this.damageService.init(this._getHurt, this._gameOver)
+    this.damageService.init(this._getHurt, this._gameOver, this._vibrate)
     this.matchService.init(this.tileService.tiles)
     this.uiService.init(_x, _y, this.playerService.getStats())
   }

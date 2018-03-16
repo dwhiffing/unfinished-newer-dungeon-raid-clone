@@ -21,9 +21,10 @@ export default class PlayerService {
     this.state = 0
   }
 
-  init (data, updateStatsCallback, gameOverCallback) {
+  init (data, updateStatsCallback, gameOverCallback, vibrateCallback) {
     this.updateStatsCallback = updateStatsCallback
     this.gameOverCallback = gameOverCallback
+    this.vibrateCallback = vibrateCallback
 
     if (data) {
       this.data = data
@@ -108,7 +109,7 @@ export default class PlayerService {
     if (newGold >= this.maxGold) {
       this.data._totalItems++
       this.state = 1
-      window.navigator.vibrate(200)
+      this.vibrateCallback(200)
       this.data._gold = 0
     }
 
@@ -121,7 +122,7 @@ export default class PlayerService {
       this.data._totalUpgrades++
       this.upgrades++
       this.state = 2
-      window.navigator.vibrate(200)
+      this.vibrateCallback(200)
       this.data._upgradeProgress = 0
     }
 
@@ -134,7 +135,7 @@ export default class PlayerService {
     if (this.data._experience >= this.maxExperience) {
       this.data._totalUpgrades++
       this.state = 3
-      window.navigator.vibrate(200)
+      this.vibrateCallback(200)
       this.data._experience = 0
     }
 
