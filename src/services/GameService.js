@@ -151,11 +151,15 @@ export default class GameService {
   }
 
   allowInput () {
-    this.playerService.save()
-    this.tileService.save()
+    this.save()
     if (!this.game.input.onDown.has(this.onPress, this)) {
       this.game.input.onDown.add(this.onPress, this)
     }
+  }
+
+  save () {
+    localStorage.setItem('player', JSON.stringify(this.playerService.data))
+    localStorage.setItem('tile', JSON.stringify(this.tileService.getSave()))
   }
 
   _vibrate (n) {

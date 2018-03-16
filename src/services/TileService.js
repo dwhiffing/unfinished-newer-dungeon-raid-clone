@@ -64,8 +64,8 @@ export default class TileService {
     }
   }
 
-  save () {
-    localStorage.setItem('tile', JSON.stringify(this.tiles.map(t => t.frame)))
+  getSave () {
+    return this.tiles.map(t => t.frame)
   }
 
   _applyGravityToIndex (index, holes) {

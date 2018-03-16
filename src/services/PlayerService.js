@@ -221,8 +221,4 @@ export default class PlayerService {
     const title = titles[this.state - 1]
     return data && title ? { data, title } : null
   }
-
-  save () {
-    localStorage.setItem('player', JSON.stringify(this.data))
-  }
 }
