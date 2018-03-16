@@ -55,10 +55,12 @@ export default class TileService {
       )
     }
 
+    this.enemiesBeforeFall = this.tiles.filter(t => t && t.frame === 0)
+
     if (this.tiles.filter(t => t == null).length > 0) {
       return this._placeNewTiles()
     } else {
-      return new Promise(resolve => resolve())
+      return new Promise(resolve => resolve(this.enemiesBeforeFall))
     }
   }
 
@@ -96,7 +98,7 @@ export default class TileService {
     tile.respawn(index, frame, holes).then(() => {
       const match = this.match.filter(t => t.frame !== 0 || t.hp <= 0)
       if (this.matchIndex === match.length - 1) {
-        resolve()
+        resolve(this.enemiesBeforeFall)
       }
       this.matchIndex++
     })

@@ -23,6 +23,7 @@ export default class GameService {
     this.shouldVibrate = false
 
     this.allowInput = this.allowInput.bind(this)
+    this.postTurn = this.postTurn.bind(this)
     this._getHurt = this._getHurt.bind(this)
 
     this.uiService = new UIService(this.game, this.game.width, this.game.height)
@@ -72,14 +73,14 @@ export default class GameService {
 
     const match = this.matchService.resolveMatch()
     if (match) {
-      return this.handleMatch(match)
+      this.handleTurn(match)
+    } else {
+      this.matchService.clearPath()
+      this.allowInput()
     }
-
-    this.matchService.clearPath()
-    this.allowInput()
   }
 
-  handleMatch (match) {
+  handleTurn (match) {
     let damage = this._calculateDamageFromTiles(match)
     let gold = 0
     let potion = 0
@@ -87,7 +88,6 @@ export default class GameService {
     let experience = 0
 
     match.forEach(tile => {
-      let _damage = damage
       if (tile.frame === 4) {
         gold++
       } else if (tile.frame === 3) {
@@ -97,46 +97,50 @@ export default class GameService {
       }
 
       if (tile.frame > 0) {
-        return this.tileService.destroyTile(tile.index)
-      }
-
-      tile.unpick()
-
-      if (tile.armor - _damage <= 0) {
-        _damage -= tile.armor
-        tile.armor = 0
+        this.tileService.destroyTile(tile.index)
       } else {
-        tile.armor -= _damage
-        return
-      }
-
-      if (_damage > 0) {
-        tile.hp -= _damage
-
-        if (tile.hp <= 0) {
+        const enemyKilled = this.damageEnemy(tile, damage)
+        if (enemyKilled) {
           experience++
-          this.tileService.destroyTile(tile.index)
         }
       }
-      tile.updateUI()
     })
 
     this.playerService.update({ gold, potion, armor, experience })
+    this.tileService.applyGravity(match).then(this.postTurn)
+  }
 
-    const enemies = this.tileService.tiles.filter(t => t && t.frame === 0)
-    this.tileService.applyGravity(match).then(() => {
-      const menu = this.playerService.getMenuState()
-
-      if (!menu) {
-        return this.applyDamage(enemies)
-      }
-
+  postTurn (enemies) {
+    const menu = this.playerService.getMenuState()
+    if (menu) {
       this.menu.show({
         data: menu.data,
         title: menu.title,
         callback: () => this.applyDamage(enemies)
       })
-    })
+    } else {
+      this.applyDamage(enemies)
+    }
+  }
+
+  damageEnemy (enemy, damage = 0) {
+    enemy.unpick()
+    let _damage = damage
+
+    _damage -= enemy.armor
+    enemy.armor -= damage
+    enemy.hp -= _damage
+
+    if (enemy.armor < 0) {
+      enemy.armor = 0
+    }
+
+    enemy.updateUI()
+
+    if (enemy.hp <= 0) {
+      this.tileService.destroyTile(enemy.index)
+      return true
+    }
   }
 
   applyDamage (enemies) {
@@ -185,9 +189,14 @@ export default class GameService {
       playerData = JSON.parse(localStorage.getItem('player'))
     } catch (e) {}
 
-    this.playerService.init(playerData, this.uiService.update)
+    this.playerService.init(
+      playerData,
+      this.uiService.update,
+      this._gameOver,
+      this._vibrate
+    )
     this.tileService.init(tileData)
-    this.damageService.init(this._getHurt, this._gameOver, this._vibrate)
+    this.damageService.init(this._getHurt)
     this.matchService.init(this.tileService.tiles)
     this.uiService.init(_x, _y, this.playerService.getStats())
   }
