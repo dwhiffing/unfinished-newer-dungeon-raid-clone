@@ -1,6 +1,7 @@
 import items from '../data/items'
 import upgrades from '../data/upgrades'
 import skills from '../data/skills'
+import pick from 'lodash/pick'
 
 const datum = [items, upgrades, skills]
 const titles = ['Shop!', 'Upgrade!', 'Level Up!']
@@ -200,20 +201,21 @@ export default class PlayerService {
   }
 
   getStats () {
-    return {
-      gold: this.gold,
-      maxGold: this.maxGold,
-      health: this.health,
-      maxHealth: this.maxHealth,
-      armor: this.armor,
-      maxArmor: this.maxArmor,
-      base: this.baseDamage,
-      weapon: this.weaponDamage,
-      upgrade: this.upgrade,
-      maxUpgrade: this.maxUpgrade,
-      experience: this.experience,
-      maxExperience: this.maxExperience
-    }
+    return pick(this, [
+      'gold',
+      'maxGold',
+      'numItems',
+      'health',
+      'maxHealth',
+      'armor',
+      'maxArmor',
+      'baseDamage',
+      'weaponDamage',
+      'upgrade',
+      'maxUpgrade',
+      'experience',
+      'maxExperience'
+    ])
   }
 
   getMenuState () {
