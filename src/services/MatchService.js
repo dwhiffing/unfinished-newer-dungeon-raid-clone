@@ -1,3 +1,7 @@
+// Responsible for:
+// handling matches from user input using TileService
+// Relates to: TileService
+
 export default class MatchService {
   constructor (game) {
     this.game = game

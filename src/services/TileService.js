@@ -2,6 +2,10 @@ import Enemy from '../sprites/Enemy'
 
 const NUM_FRAMES = 5
 
+// Responsible for:
+// Creating and managing tiles
+// Relates to: MatchService
+
 export default class TileService {
   constructor (game, x, y) {
     this.game = game

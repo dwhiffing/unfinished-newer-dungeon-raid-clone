@@ -1,5 +1,9 @@
 import Phaser from 'phaser'
 
+// Responsible for:
+// Rendering path for active match on path
+// Relates to: TileService
+
 export default class ArrowService {
   constructor (game, x, y) {
     this.addSprite = (x, y) => game.add.sprite(x, y, 'arrows')

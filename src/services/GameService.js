@@ -8,6 +8,12 @@ import DamageService from './DamageService'
 
 let _x, _y
 
+// Responsible for:
+// handling input
+// orchestrating game logic/services
+// (deferring to services for lower level tasks and informing other services)
+// managing game state
+
 export default class GameService {
   constructor () {
     this.game = window.game

@@ -5,11 +5,15 @@ import skills from '../data/skills'
 const datum = [items, upgrades, skills]
 const titles = ['Shop!', 'Upgrade!', 'Level Up!']
 
+// Responsible for:
+// managing and updating player stats
+// Relates to: DamageService
+
 // Barbarian - Can jump over tiles to hit more enemies/swords
 // Paladin - Can bash with shield
 // Thief - Gold speciality
 // Druid - Potion speciality
-// Wizard - Low damage to all enemies
+// Wizard - Skill speciality
 
 export default class PlayerService {
   constructor (game) {

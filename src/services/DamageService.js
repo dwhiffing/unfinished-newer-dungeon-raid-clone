@@ -1,6 +1,11 @@
 import Phaser from 'phaser'
 import Attack from '../sprites/Attack'
 
+// Responsible for:
+// rendering dealing damage to enemies
+// rendering receiving damage from enemies
+// Relates to: PlayerService, TileService, MatchService
+
 export default class DamageService {
   constructor (game, x, y) {
     this.game = game
