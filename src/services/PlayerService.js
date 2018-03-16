@@ -143,40 +143,42 @@ export default class PlayerService {
     this.updateStatsCallback(this.getStats())
   }
 
-  get health () {
-    return this.data._health
-  }
-
-  get armor () {
-    return this.data._armor
-  }
-
   get gold () {
+    // return this.goldXpService.xp
     return this.data._gold
   }
 
-  get upgrade () {
-    return this.data._upgradeProgress
+  get maxGold () {
+    // return this.goldXpService.xpMultiplier
+    return 50 + 1 * this.data.luck - 1
   }
 
-  get experience () {
-    return this.data._experience
+  get health () {
+    return this.data._health
   }
 
   get maxHealth () {
     return 50 + 10 * this.data.dexterity - 10
   }
 
+  get armor () {
+    return this.data._armor
+  }
+
   get maxArmor () {
     return this.data.items[1] + this.data.items[2] + this.data.items[3]
   }
 
-  get maxGold () {
-    return 50 + 1 * this.data.luck - 1
+  get upgrade () {
+    return this.data._upgradeProgress
   }
 
   get maxUpgrade () {
     return 50 + 1 * this.data.dexterity - 1
+  }
+
+  get experience () {
+    return this.data._experience
   }
 
   get maxExperience () {
