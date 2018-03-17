@@ -1,0 +1,78 @@
+Banish
+  Banish kills a special monster on the screen, though it offers no reward.
+Berserk
+  Killing enemies this turn gives health equal to their attacks.
+Big Game Hunter
+  This skill will convert a random skull anywhere on the board to a random special skull.
+Boost Armour
+  Doubles all armor collected for a single turn.
+Boost Damage
+  Doubles all sword damage for a single turn.
+Boost Gold
+  Doubles all gold collected for a single turn.
+Boost Health
+  Double all potions collected for a single turn.
+Counterattack
+  All enemies will attack themselves the next turn.
+Dazzle
+  Converts all coins to swords.
+Disarm
+  Converts all skulls to swords.
+Earthquake
+  Randomly rearranges all tiles on the board.
+Enchant
+  Allows the player to instantly upgrade an item.
+Exorcise
+  Converts a random special skull to a normal skull.
+Explosive Armour
+  Damages every skull on the board equal to how many armour points you currently have. So if your armour is 13/20 the skill will cause 13 points of damage to all skulls.
+Explosive Potion
+  Turns all potions on the screen into exploding potions. Matched explosive potions destroy nearby tiles. These potions can be included in the same chain as health and mana potions. Explosive potions do not do any damage to special skulls.
+Fireball
+  Collect a random 3x3 block of tiles.
+Freeze
+  Freezes enemies so they are unable to attack for one turn.
+Golden Touch
+  Converts all swords to coins.
+Greed
+  Kills any skulls that are next to a coin. Does not work on special skulls.
+Hack
+  Replaces a random row with swords.
+Haste
+  Creates a chain tile, which allows you to match two different tile types.
+Heal
+  Collect all healing potions.
+Last Stand
+  Refill health completely if you are killed this turn.
+Magic Sword
+  Converts one random sword into a magic sword tile, which does 5 times the damage of a regular sword.
+Mana Potion
+  Turns all potions on the screen into mana potions. Matched mana potions reduce the cooldown on available abilites by the number of mana potions in the chain. These potions can be included in the same chain as health and explosive potions.
+Masochism
+  Converts all coins to skulls. This ability can create special skulls as well.
+Repair
+  Collect all shields.
+Rune
+  If you trace a closed path this turn, collect all tiles inside it.
+Scavenge
+  Convert all swords to shields.
+Shatter
+  Detroy all enemies' defense.
+Skill Elixir
+  Collect all healing potions as XP.
+Slash
+  Collect a random row of tiles.
+Steal
+  Attacking enemies gives gold for a single turn.
+Teleport
+  Replaces the current board with all new tiles with no skulls.
+Trap
+  All new monsters added to the board that turn are created with 1 HP.
+Treasure
+  Collect all coins.
+Treasure Chamber
+  All new tiles added to the board that turn are coins. Does not stack with teleport or the hack & slash combo.
+Volley
+  Converts all swords to arrows. Arrows can match enemies 1 tile away. Can be included in the same chain as swords.
+Wish
+  Collects all tiles on the board. This is a single use skill.

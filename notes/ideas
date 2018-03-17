@@ -1,0 +1,41 @@
+Game Focus
+  Grind up for awhile to get better stats, items, and scrolls
+  Get ambushed by enemy group and attempt to use resources from grind to win
+  Win/Die
+  Rinse/Repeat
+
+  should have 'dungeons'
+  ie, set of levels where each level becomes harder (stronger enemies.etc)
+
+Resources
+  Enemies/Swords
+    Enemies give xp when killed, take hp when not killed
+    Swords give additive damage boost based on weapon
+  Shields
+    Give armor when in need of repair, addition tiles are added as item points
+    When item points are full, you can replace or improve an item
+  Potions
+    Give hp
+    Could potentially generate extra potions when hp is full, likely to complicated to start
+  Gold
+    Gives scroll points when collected
+    Allows you to pick 1 new scroll from 3, or recharge an existing scroll
+
+Leveling
+  recharges all of your scrolls
+  refills your health and armor
+  every level boosts:
+    base damage
+    base armor
+    base health
+    Base bonus chance
+    base scroll charge
+    additional scroll become available
+
+Menus
+  Level up
+    shows stat boosts
+  Item
+    Pick a new item or upgrade an existing one
+  Scroll
+    Pick a new scroll or recharge an existing one

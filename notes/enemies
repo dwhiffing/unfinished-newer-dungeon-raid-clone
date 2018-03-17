@@ -1,0 +1,60 @@
+Acidic	
+  Each turn converts a healing potion into acid, which causes you damage when collected
+Alchemist
+  Converts 2 tiles into something else each turn
+Alpha
+  Moves skulls to the tiles around himself each turn
+Armoured
+  Can only be damaged if you trace a path to one of the 3 squares above it. Therefore it cannot be damaged if it's in the topmost row. It can still be poisoned, however, regardless of the path traced
+Assassin
+  Damages your health for twice it's attack power each turn if he's in the bottom row. Since it will still attack normally, that means triple the usual damage!
+Boss
+  Like a regular skull, but has much higher stats
+Brute
+  Throws a regular skull at you each turn, killing that skull but damaging you by the health it had
+Chaotic
+  Jumps to a random position every turn, consuming the tile it lands on. May jump on regular skulls, killing them
+Corrosive
+  You cannot repair your armour while a corrosive monster in play
+Devourer
+  Starts with a countdown of 4 turns. Destroys a random upgrade you own when the countdown runs out, and resets the countdown
+Doppelganger
+  Matches your current defense value every turn. This means it is best to attack this enemy when you're low on defense points
+Flaming
+  Ignites all surrounding tiles. Matching burning tiles will damage you, and burning enemies are damaged each turn by this monster's attack value
+Fleeing
+  Moves up 1 tile each turn until it leaves the board from the top. Damages you by its attack value every time it's forced to move down
+Freezing
+  Freezes two random tiles each turn. Frozen tiles cannot be matched, and frozen enemies cannot attack (they can, however, still be matched!). Tiles unfreeze when the turn ends.
+Golden
+  Killing it before itss countdown runs out will net you about 40 coins worth of gold. Otherwise it disappears and gives no reward
+Greasy
+  Shifts all other skulls down one row each turn
+Kamikaze
+  Explodes after time runs out, causing half your health in damage. Explodes nearby tiles when killed
+Invisible
+  Has a very high defense value, but low health. Easily taken care of with poison
+Mage
+  Your skill cooldowns do not naturally recharge while the Mage is in play
+Magnetic
+  Moves swords and shields to the tiles around himself each turn. It seems to prefer moving shields first than swords
+Meat Shield
+  Other skulls cannot be damaged while the Meat Shield is alive. Any damage inflicted on other skulls will be applied to the Meat Shield instead.
+Lich
+  Transforms into a phylactery when killed. If the phylactery is not matched with coins before the next turn begins, it will turn into a new Lich
+Overseer
+  Each turn converts a sword into a skull
+Poisonous
+  Causes poison if attacks from other skulls hit you. Poison damage is applied each turn until you collect a health potion
+Spiked
+  You get dealt the same amount of damage as you deal to it, including overkill damage. So if the Spiked has 50 health and you kill him with 70 damage, you receive 70 damage back regardless
+Thief
+  Steals 2 coins tiles each turn, or gold from your inventory if there's no coin tiles in play
+Trampling
+  Breaks a random sword or shield each turn. Broken tiles do nothing when collected
+Unstable
+  Replaces all the tiles with new ones when the countdown runs out. The new tiles will not contain any skulls
+Vampire
+  Heals itself by its attack value every time it hits you
+Vengeful
+  Gains 1 attack each time you kill another enemy

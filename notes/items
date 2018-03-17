@@ -1,0 +1,76 @@
+Stats
+  Items
+    Weapon
+      Damage per sword
+      +Armor piercing (chance of piercing enemy armor)
+    Shield
+      Repair per shield
+      +Bonus shield chance
+      +Armor durability (chance of no damage)
+    Armor
+      Max armor
+      +Bonus shield chance
+      +Armor durability (chance of no damage)
+    Ring
+      Health per potion
+      +Bonus xp chance
+      +Bonus potion chance
+      +Bonus coin chance
+
+Armour piercing
+  Damage enemy armour
+  +Pierce: +10%
+Armour
+  +Defense
+  Defence: x>>x+1
+Base damage
+  +Base damage
+  Damage: +1
+Blunting
+  Reduce enemies' attack
+  Attack damage: -1
+Boost dexterity
+  (+1 repair, +5% shield)
+  +DEX: +1
+Boost gold
+  +Gold per coin
+  +GP: +.25
+Boost luck
+  (+1 potion, +5% coin)
+  +LUK: +1
+Boost strength
+  (+1 base dmg, +5% XP)
+  +STR: 1
+Boost UP
+  +Upgrade per shield
+  +UP: +.25
+Boost vitality
+  (+5% HP, +5% potion)
+  +VIT: x>>x+1
+Boost XP
+  +Experience per skull
+  +XP: +.25
+Durability
+  Less armour damage
+  +Armour damage: x+10%
+Life leech
+  Attacking gives health
+  Leech: +5%
+Poison
+  Poison for 3 turns
+  Poison damage: +1
+Quicken
+  Reduce all cooldown
+  -Cooldown: +1
+Regenerate
+  Recover health each turn
+  HP regenerate: 1
+Repair
+  +Defense per shield
+  +Repair: +1
+Spikes
+  Damage attackers
+  Spike damage: +1
+Weapon damage
+  +Weapon damage
+  Damage: x>>x+1

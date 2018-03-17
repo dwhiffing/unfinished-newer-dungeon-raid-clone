@@ -1,0 +1,35 @@
+Assassin
+  Class perk: Cunning (-1 cooldown for the 4th skill chosen)
+  Class flaw: Sneaky (All enemies have +1 health)
+
+Barbarian
+  Class perk: Strong (+1 base damage)
+  Class flaw: Reckless (-10% bonus shield chance)
+
+Mage
+  Class perk: Gifted (5% of healing potions spawn as mana potions. If a skill is undergoing a cooldown period, collecting a mana potion will reduce that cooldown by 1 turn)
+  Class flaw: Frail (-10 maximum health)
+
+Paladin
+  Class perk: Intimidating (Mortal enemy appears 50% less often than usual)
+  Class flaw: Zealous (Special skulls appear 1 turn earlier than usual)
+
+Priest
+  Class perk: Faithful (double effect from regeneration upgrades)
+  Class flaw: Cautious (-20% armor piercing)
+
+Raider
+  Class perk: Daring (100% bonus chance for tracing 10+ tiles)
+  Class flaw: Cocky (Matching only 3 tiles gives you nothing)
+
+Ranger
+  Class perk: Agile (5% of swords spawn as arrows instead. Arrows can match enemies 1 tile away)
+  Class flaw: Slim (-1 armour)
+
+Rogue
+  Class perk: Frugal (+10% bonus gold chance)
+  Class flaw: Clumsy (3% of shields spawn as broken, which can be matched with regular shields but will not give any defense points)
+
+Warrior
+  Class perk: Tough (+10 to maximum health)
+  Class flaw: Noisy (Special skulls have +5% health)

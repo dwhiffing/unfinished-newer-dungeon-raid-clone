@@ -1,0 +1,25 @@
+Stats
+  Items
+    Weapon
+      Damage per sword
+      +Armor piercing (chance of piercing enemy armor)
+    Shield
+      Repair per shield
+      +Bonus shield chance
+      +Armor durability (chance of no damage)
+    Armor
+      Max armor
+      +Bonus shield chance
+      +Armor durability (chance of no damage)
+    Ring
+      Health per potion
+      +Bonus xp chance
+      +Bonus potion chance
+      +Bonus coin chance
+  XP
+    Base damage
+    Base armor
+    Max health
+    Base bonus chance
+    Base scroll charge
+    
