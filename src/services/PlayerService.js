@@ -1,40 +1,23 @@
-import items from '../data/items'
-import upgrades from '../data/upgrades'
-import skills from '../data/skills'
-import pick from 'lodash/pick'
-
-const datum = [items, upgrades, skills]
-const titles = ['Shop!', 'Upgrade!', 'Level Up!']
+import ExperienceService from './ExperienceService'
 
 // Responsible for:
 // managing and updating player stats
 // Relates to: DamageService
 
-// Barbarian - Can jump over tiles to hit more enemies/swords
-// Paladin - Can bash with shield
-// Thief - Gold speciality
-// Druid - Potion speciality
-// Wizard - Skill speciality
-
 export default class PlayerService {
   constructor (game) {
     this.game = game
-    this.state = 0
   }
 
-  init (data, updateStatsCallback, gameOverCallback, vibrateCallback) {
+  init (save, updateStatsCallback, gameOverCallback, stateCallback) {
     this.updateStatsCallback = updateStatsCallback
     this.gameOverCallback = gameOverCallback
-    this.vibrateCallback = vibrateCallback
+    this.stateCallback = stateCallback
 
-    if (data) {
-      this.data = data
+    if (save) {
+      this.data = save
     } else {
       this.data = {}
-
-      this.data.level = 1
-      this.data._totalExperience = 0
-      this.data._experience = 0
 
       this.data.strength = 1
       this.data.dexterity = 1
@@ -44,16 +27,25 @@ export default class PlayerService {
 
       this.data._totalArmor = 0
       this.data._armor = this.maxArmor
-      this.data._totalUpgrades = 0
-      this.data._upgradeProgress = 0
-
-      this.data._totalGold = 0
-      this.data._gold = 0
-      this.data._totalItems = 0
 
       this.data._totalPotions = 0
       this.data._health = this.maxHealth
     }
+
+    this.goldXpService = new ExperienceService({
+      xpMultiplier: 5,
+      xp: this.data.goldXp || 0
+    })
+
+    this.upgradeXpService = new ExperienceService({
+      xpMultiplier: 5,
+      xp: this.data.upgradeXp || 0
+    })
+
+    this.playerXpService = new ExperienceService({
+      xpMultiplier: 5,
+      xp: this.data.playerXp || 0
+    })
   }
 
   set health (newHealth) {
@@ -101,56 +93,36 @@ export default class PlayerService {
   }
 
   set gold (newGold) {
-    const change = newGold - this.data._gold
-    if (change > 0) {
-      this.data._totalGold += change
-    }
-    this.data._gold = newGold
+    let levelBeforeChange = this.goldXpService.level
+    this.goldXpService.xp = newGold
 
-    if (newGold >= this.maxGold) {
-      this.data._totalItems++
-      this.state = 1
-      this.vibrateCallback(200)
-      this.data._gold = 0
+    if (levelBeforeChange !== this.goldXpService.level) {
+      this.stateCallback(1)
     }
 
     this.updateStatsCallback(this.getStats())
   }
 
   set upgrade (newUpgrade) {
-    this.data._upgradeProgress = newUpgrade
-    if (this.data._upgradeProgress >= this.maxUpgrade) {
-      this.data._totalUpgrades++
-      this.upgrades++
-      this.state = 2
-      this.vibrateCallback(200)
-      this.data._upgradeProgress = 0
+    let levelBeforeChange = this.upgradeXpService.level
+    this.upgradeXpService.xp = newUpgrade
+
+    if (levelBeforeChange !== this.upgradeXpService.level) {
+      this.stateCallback(2)
     }
 
     this.updateStatsCallback(this.getStats())
   }
 
   set experience (newExperience) {
-    this.data._totalExperience += newExperience - this.data._experience
-    this.data._experience = newExperience
-    if (this.data._experience >= this.maxExperience) {
-      this.data._totalUpgrades++
-      this.state = 3
-      this.vibrateCallback(200)
-      this.data._experience = 0
+    let levelBeforeChange = this.playerXpService.level
+    this.playerXpService.xp = newExperience
+
+    if (levelBeforeChange !== this.playerXpService.level) {
+      this.stateCallback(3)
     }
 
     this.updateStatsCallback(this.getStats())
-  }
-
-  get gold () {
-    // return this.goldXpService.xp
-    return this.data._gold
-  }
-
-  get maxGold () {
-    // return this.goldXpService.xpMultiplier
-    return 50 + 1 * this.data.luck - 1
   }
 
   get health () {
@@ -170,19 +142,15 @@ export default class PlayerService {
   }
 
   get upgrade () {
-    return this.data._upgradeProgress
+    return this.upgradeXpService.totalXp
   }
 
-  get maxUpgrade () {
-    return 50 + 1 * this.data.dexterity - 1
+  get gold () {
+    return this.goldXpService.totalXp
   }
 
   get experience () {
-    return this.data._experience
-  }
-
-  get maxExperience () {
-    return 50 + 1 * this.data.level - 1
+    return this.playerXpService.totalXp
   }
 
   get baseDamage () {
@@ -194,35 +162,33 @@ export default class PlayerService {
   }
 
   update ({ gold = 0, potion = 0, armor = 0, experience = 0 }) {
-    this.gold += gold
     this.health += potion
     this.armor += armor
+    this.gold += gold
     this.experience += experience
 
     this.updateStatsCallback(this.getStats())
   }
 
   getStats () {
-    return pick(this, [
-      'gold',
-      'maxGold',
-      'numItems',
-      'health',
-      'maxHealth',
-      'armor',
-      'maxArmor',
-      'baseDamage',
-      'weaponDamage',
-      'upgrade',
-      'maxUpgrade',
-      'experience',
-      'maxExperience'
-    ])
+    return {
+      health: this.health,
+      maxHealth: this.maxHealth,
+      armor: this.armor,
+      maxArmor: this.maxArmor,
+      baseDamage: this.baseDamage,
+      weaponDamage: this.weaponDamage,
+      gold: this.goldXpService,
+      player: this.playerXpService,
+      upgrade: this.upgradeXpService
+    }
   }
 
-  getMenuState () {
-    const data = datum[this.state - 1]
-    const title = titles[this.state - 1]
-    return data && title ? { data, title } : null
+  getSave () {
+    return Object.assign({}, this.data, {
+      playerXp: this.playerXpService.totalXp,
+      goldXp: this.goldXpService.totalXp,
+      upgradeXp: this.upgradeXpService.totalXp
+    })
   }
 }

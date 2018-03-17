@@ -2,7 +2,7 @@ import ArrowService from './ArrowService'
 import TileService from './TileService'
 import PlayerService from './PlayerService'
 import MatchService from './MatchService'
-import Menu from '../sprites/Menu'
+import MenuService from './MenuService'
 import UIService from './UIService'
 import DamageService from './DamageService'
 
@@ -17,6 +17,9 @@ let _x, _y
 export default class GameService {
   constructor () {
     this.game = window.game
+
+    window.gameService = this
+
     _x = window.leftBuffer
     _y = window.topBuffer
 
@@ -25,6 +28,7 @@ export default class GameService {
     this.allowInput = this.allowInput.bind(this)
     this.postTurn = this.postTurn.bind(this)
     this._getHurt = this._getHurt.bind(this)
+    this._setMenuState = this._setMenuState.bind(this)
 
     this.uiService = new UIService(this.game, this.game.width, this.game.height)
     this.tileService = new TileService(this.game, _x, _y)
@@ -32,7 +36,7 @@ export default class GameService {
     this.damageService = new DamageService(this.game, _x, _y)
     this.arrowService = new ArrowService(this.game, _x, _y)
     this.matchService = new MatchService(this.game, _x, _y)
-    this.menu = new Menu(this.game, this.game.width / 2, this.game.height / 2)
+    this.menuService = new MenuService(this.game)
 
     this._loadSave()
     this.allowInput()
@@ -111,16 +115,7 @@ export default class GameService {
   }
 
   postTurn (enemies) {
-    const menu = this.playerService.getMenuState()
-    if (menu) {
-      this.menu.show({
-        data: menu.data,
-        title: menu.title,
-        callback: () => this.applyDamage(enemies)
-      })
-    } else {
-      this.applyDamage(enemies)
-    }
+    this.menuService.show().then(() => this.applyDamage(enemies))
   }
 
   damageEnemy (enemy, damage = 0) {
@@ -158,7 +153,7 @@ export default class GameService {
   }
 
   save () {
-    localStorage.setItem('player', JSON.stringify(this.playerService.data))
+    localStorage.setItem('player', JSON.stringify(this.playerService.getSave()))
     localStorage.setItem('tile', JSON.stringify(this.tileService.getSave()))
   }
 
@@ -197,12 +192,17 @@ export default class GameService {
       playerData,
       this.uiService.update,
       this._gameOver,
-      this._vibrate
+      this._setMenuState
     )
     this.tileService.init(tileData)
     this.damageService.init(this._getHurt)
     this.matchService.init(this.tileService.tiles)
     this.uiService.init(_x, _y, this.playerService.getStats())
+  }
+
+  _setMenuState (n) {
+    this.menuService.setState(n)
+    this._vibrate(200)
   }
 
   _calculateDamageFromTiles (tiles) {
