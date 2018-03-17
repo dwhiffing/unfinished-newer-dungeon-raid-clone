@@ -61,7 +61,7 @@ export default class Menu {
 
   clickOption (n) {
     if (this.selected === n) {
-      this.hide().then(this.callback)
+      this.hide().then(() => this.callback(this.selected))
       return
     }
     this._deselect()

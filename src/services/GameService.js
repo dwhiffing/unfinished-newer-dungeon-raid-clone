@@ -115,7 +115,14 @@ export default class GameService {
   }
 
   postTurn (enemies) {
-    this.menuService.show().then(() => this.applyDamage(enemies))
+    this.menuService.show().then(upgrade => {
+      if (upgrade) {
+        if (upgrade.effect[0] === 'statIncrease') {
+          this.playerService[upgrade.effect[1]] += upgrade.effect[2]
+        }
+      }
+      this.applyDamage(enemies)
+    })
   }
 
   damageEnemy (enemy, damage = 0) {

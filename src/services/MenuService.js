@@ -29,10 +29,10 @@ export default class MenuService {
         this.menu.show({
           data: menu.data,
           title: menu.title,
-          callback: () => resolve()
+          callback: upgrade => resolve(upgrade)
         })
       } else {
-        resolve()
+        resolve(false)
       }
     })
   }

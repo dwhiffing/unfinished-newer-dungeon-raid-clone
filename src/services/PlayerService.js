@@ -125,12 +125,48 @@ export default class PlayerService {
     this.updateStatsCallback(this.getStats())
   }
 
+  set strength (newStrength) {
+    this.data.strength = newStrength
+    this.updateStatsCallback(this.getStats())
+  }
+
+  set dexterity (newDexterity) {
+    this.data.dexterity = newDexterity
+    this.updateStatsCallback(this.getStats())
+  }
+
+  set vitality (newVitality) {
+    this.data.vitality = newVitality
+    this.updateStatsCallback(this.getStats())
+  }
+
+  set luck (newLuck) {
+    this.data.luck = newLuck
+    this.updateStatsCallback(this.getStats())
+  }
+
+  get strength () {
+    return this.data.strength
+  }
+
+  get dexterity () {
+    return this.data.dexterity
+  }
+
+  get vitality () {
+    return this.data.vitality
+  }
+
+  get luck () {
+    return this.data.luck
+  }
+
   get health () {
     return this.data._health
   }
 
   get maxHealth () {
-    return 50 + 10 * this.data.dexterity - 10
+    return 10 + this.data.vitality * 10
   }
 
   get armor () {
@@ -138,7 +174,12 @@ export default class PlayerService {
   }
 
   get maxArmor () {
-    return this.data.items[1] + this.data.items[2] + this.data.items[3]
+    return (
+      this.data.items[0] +
+      this.data.items[1] +
+      this.data.items[2] +
+      this.data.items[3]
+    )
   }
 
   get upgrade () {
@@ -180,7 +221,11 @@ export default class PlayerService {
       weaponDamage: this.weaponDamage,
       gold: this.goldXpService,
       player: this.playerXpService,
-      upgrade: this.upgradeXpService
+      upgrade: this.upgradeXpService,
+      strength: this.data.strength,
+      dexterity: this.data.dexterity,
+      vitality: this.data.vitality,
+      luck: this.data.luck
     }
   }
 

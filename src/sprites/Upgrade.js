@@ -28,10 +28,11 @@ export default class Upgrade {
     this.group.position = { x, y }
   }
 
-  reset ({ title = '', description = '', footer = '' }) {
+  reset ({ title = '', description = '', footer = '', effect = '' }) {
     this.title.text = title
     this.description.text = description
     this.footer.text = footer
+    this.effect = effect
   }
 
   select () {
