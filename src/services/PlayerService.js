@@ -20,7 +20,7 @@ export default class PlayerService {
   }
 
   init (
-    save = {},
+    save,
     updateStatsCallback,
     gameOverCallback,
     stateCallback,
@@ -30,8 +30,8 @@ export default class PlayerService {
     this.vibrateCallback = vibrateCallback
     this.gameOverCallback = gameOverCallback
     this.stateCallback = stateCallback
-    this.handleUpgrade = this.handleUpgrade.bind(this)
-    this.takeDamage = this.takeDamage.bind(this)
+
+    save = save || {}
 
     this.healthCounter = new CounterService(save.health || INITIAL_HEALTH)
     this.armorCounter = new CounterService(save.armor || INITIAL_ARMOR)
@@ -105,7 +105,7 @@ export default class PlayerService {
     return INITIAL_WEAPON_DAMAGE
   }
 
-  update ({ gold = 0, potion = 0, armor = 0, experience = 0 }) {
+  update = ({ gold = 0, potion = 0, armor = 0, experience = 0 }) => {
     this.health += potion
     this.armor += armor
     this.gold += gold
@@ -114,7 +114,7 @@ export default class PlayerService {
     this.updateStatsCallback(this.getStats())
   }
 
-  takeDamage (damage, type) {
+  takeDamage = (damage, type) => {
     if (type === 'armor') {
       this.vibrateCallback(50)
       this.armor -= damage
@@ -124,7 +124,7 @@ export default class PlayerService {
     }
   }
 
-  updateXpService (service, value, state) {
+  updateXpService = (service, value, state) => {
     let levelBeforeChange = service.level
     service.xp = value
 
@@ -135,7 +135,7 @@ export default class PlayerService {
     this.updateStatsCallback(this.getStats())
   }
 
-  handleUpgrade (upgrade) {
+  handleUpgrade = upgrade => {
     if (!upgrade) {
       return
     }
@@ -145,27 +145,21 @@ export default class PlayerService {
     }
   }
 
-  getStats () {
-    return {
-      health: this.healthCounter.value,
-      maxHealth: this.healthCounter.max,
-      armor: this.armorCounter.value,
-      maxArmor: this.armorCounter.max,
-      baseDamage: this.baseDamage,
-      weaponDamage: this.weaponDamage,
-      gold: this.goldXpService,
-      player: this.playerXpService,
-      upgrade: this.upgradeXpService
-    }
-  }
+  getStats = () => ({
+    health: this.healthCounter,
+    armor: this.armorCounter,
+    baseDamage: this.baseDamage,
+    weaponDamage: this.weaponDamage,
+    gold: this.goldXpService,
+    player: this.playerXpService,
+    upgrade: this.upgradeXpService
+  })
 
-  getSave () {
-    return {
-      upgradeXp: pick(this.upgradeXpService, ['xpMultiplier', 'total']),
-      goldXp: pick(this.goldXpService, ['xpMultiplier', 'total']),
-      playerXp: pick(this.playerXpService, ['xpMultiplier', 'total']),
-      health: pick(this.healthCounter, ['value', 'max', 'total']),
-      armor: pick(this.armorCounter, ['value', 'max', 'total'])
-    }
-  }
+  getSave = () => ({
+    upgradeXp: pick(this.upgradeXpService, ['xpMultiplier', 'total']),
+    goldXp: pick(this.goldXpService, ['xpMultiplier', 'total']),
+    playerXp: pick(this.playerXpService, ['xpMultiplier', 'total']),
+    health: pick(this.healthCounter, ['value', 'max', 'total']),
+    armor: pick(this.armorCounter, ['value', 'max', 'total'])
+  })
 }

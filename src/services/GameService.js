@@ -25,10 +25,6 @@ export default class GameService {
 
     this.shouldVibrate = false
 
-    this.allowInput = this.allowInput.bind(this)
-    this.postTurn = this.postTurn.bind(this)
-    this._setMenuState = this._setMenuState.bind(this)
-
     this.tileService = new TileService(this.game, _x, _y)
     this.uiService = new UIService(this.game, this.game.width, this.game.height)
     this.playerService = new PlayerService(this.game, _x, _y)
@@ -113,7 +109,7 @@ export default class GameService {
     this.tileService.applyGravity(match).then(this.postTurn)
   }
 
-  postTurn (enemies) {
+  postTurn = enemies => {
     this.menuService.show().then(upgrade => {
       this.playerService.handleUpgrade(upgrade)
       this.applyDamage(enemies)
@@ -146,7 +142,7 @@ export default class GameService {
       .then(this.allowInput)
   }
 
-  allowInput () {
+  allowInput = () => {
     this.save()
     if (!this.game.input.onDown.has(this.onPress, this)) {
       this.game.input.onDown.add(this.onPress, this)
@@ -192,7 +188,7 @@ export default class GameService {
     this.uiService.init(_x, _y, this.playerService.getStats())
   }
 
-  _setMenuState (n) {
+  _setMenuState = n => {
     this.menuService.setState(n)
     this._vibrate(200)
   }

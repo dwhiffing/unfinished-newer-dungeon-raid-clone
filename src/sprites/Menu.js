@@ -28,7 +28,7 @@ export default class Menu {
         game,
         x: 20,
         y: i * 70 + 60,
-        callback: this.clickOption.bind(this)
+        callback: this.clickOption
       })
       this.upgrades.push(upgrade)
       this.group.add(upgrade.group)
@@ -59,7 +59,7 @@ export default class Menu {
     })
   }
 
-  clickOption (n) {
+  clickOption = n => {
     if (this.selected === n) {
       this.hide().then(() => this.callback(this.selected))
       return

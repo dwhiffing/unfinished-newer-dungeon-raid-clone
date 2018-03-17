@@ -4,7 +4,6 @@ export default class extends Phaser.State {
   init () {
     this.stage.backgroundColor = '#000000'
     this.fontsReady = false
-    this.fontsLoaded = this.fontsLoaded.bind(this)
   }
 
   preload () {
@@ -30,7 +29,7 @@ export default class extends Phaser.State {
     // }
   }
 
-  fontsLoaded () {
+  fontsLoaded = () => {
     this.fontsReady = true
   }
 }

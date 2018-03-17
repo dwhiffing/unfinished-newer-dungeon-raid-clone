@@ -2,7 +2,6 @@ export default class UIService {
   constructor (game, x, y) {
     this.game = game
     this.group = this.game.add.group()
-    this.update = this.update.bind(this)
 
     this.header = game.add.graphics(0, 0)
     this.header.beginFill(0x222222)
@@ -22,8 +21,10 @@ export default class UIService {
   }
 
   init (_x, _y, stats) {
-    this.group.bringToTop(this.header)
     this.textGroup = this.game.add.group()
+    this.textGroup.x = _x + 5
+    this.group.bringToTop(this.header)
+    this.group.add(this.textGroup)
 
     const { width } = this.game
     const x = width >= window.gridSize ? window.gridSize : width
@@ -37,23 +38,16 @@ export default class UIService {
       experience: this._initText(x - 50, 75, '0/100', '#00ff00', 24)
     }
 
-    this.textGroup.x = _x + 5
-    this.group.add(this.textGroup)
     this.update(stats)
   }
 
-  update (stats) {
-    this.texts.health.text = `${stats.health}/${stats.maxHealth}`
-    this.texts.armor.text = `${stats.armor}/${stats.maxArmor}`
-    this.texts.gold.text = `${stats.gold.level}: ${stats.gold.xp}/${
-      stats.gold.xpToNext
-    }`
-    this.texts.upgrade.text = `${stats.upgrade.level}: ${stats.upgrade.xp}/${
-      stats.upgrade.xpToNext
-    }`
-    this.texts.experience.text = `${stats.player.level}: ${stats.player.xp}/${
-      stats.player.xpToNext
-    }`
+  update = stats => {
+    const { health, armor, gold, upgrade: up, player: play } = stats
+    this.texts.health.text = `${health.value}/${health.max}`
+    this.texts.armor.text = `${armor.value}/${armor.max}`
+    this.texts.gold.text = `${gold.level}: ${gold.xp}/${gold.toNext}`
+    this.texts.upgrade.text = `${up.level}: ${up.xp}/${up.toNext}`
+    this.texts.experience.text = `${play.level}: ${play.xp}/${play.toNext}`
     this.texts.base.text = `${stats.baseDamage}/${stats.weaponDamage}`
   }
 

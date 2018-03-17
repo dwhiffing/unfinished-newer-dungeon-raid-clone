@@ -32,7 +32,7 @@ export default class ExperienceService {
     return level
   }
 
-  get xpToNext () {
+  get toNext () {
     return this.xpForNextLevel(this.level) - this.xpForNextLevel(this.level - 1)
   }
 

@@ -10,7 +10,6 @@ const FILLS = ['#f00', '#f00', '#6562F0', '#f00', '#ff0']
 export default class ArrowService {
   constructor (game, x, y) {
     this.addSprite = (x, y) => game.add.sprite(x, y, 'arrows')
-    this.update = this.update.bind(this)
 
     this.group = game.add.group()
     this.group.position.setTo(x, y)
@@ -19,7 +18,7 @@ export default class ArrowService {
     this.clear()
   }
 
-  update (position, tiles, damage) {
+  update = (position, tiles, damage) => {
     if (this._stringifyTiles(tiles) === this.tileIndexes) {
       return
     } else {

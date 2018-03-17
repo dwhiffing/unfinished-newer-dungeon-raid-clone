@@ -40,10 +40,10 @@ export default class DamageService {
 
   update (dyingEnemies) {
     this.clear()
-    dyingEnemies.forEach(this.showEnemyDying.bind(this))
+    dyingEnemies.forEach(this.showEnemyDying)
   }
 
-  showEnemyDying (enemy, i) {
+  showEnemyDying = (enemy, i) => {
     if (this.attacks.some(a => a.index === enemy.index)) {
       return
     }
