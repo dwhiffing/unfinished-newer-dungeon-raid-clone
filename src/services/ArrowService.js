@@ -4,6 +4,9 @@ import Phaser from 'phaser'
 // Rendering path for active match on path
 // Relates to: TileService
 
+const AFFIXES = ['DP', 'DP', 'AP', 'HP', 'GP']
+const FILLS = ['#f00', '#f00', '#6562F0', '#f00', '#ff0']
+
 export default class ArrowService {
   constructor (game, x, y) {
     this.addSprite = (x, y) => game.add.sprite(x, y, 'arrows')
@@ -11,7 +14,7 @@ export default class ArrowService {
 
     this.group = game.add.group()
     this.group.position.setTo(x, y)
-    this.damageText = game.add.text(0, 0, 'dmg')
+    this.valueText = game.add.text(0, 0, 'dmg')
 
     this.clear()
   }
@@ -25,11 +28,17 @@ export default class ArrowService {
 
     this.clear()
 
-    if (damage > 0) {
-      this.damageText.alpha = 1
-      this.damageText.text = `${damage} DMG`
-      this.damageText.x = position.x
-      this.damageText.y = position.y - 80
+    if (tiles.length >= 3) {
+      this.valueText.alpha = 1
+      this.valueText.x = position.x
+      this.valueText.y = position.y - 80
+
+      const fill = FILLS[tiles[0].frame]
+      this.valueText.fill = fill
+
+      const number = damage > 0 ? damage : tiles.length
+      const affix = AFFIXES[tiles[0].frame]
+      this.valueText.text = `${number} ${affix}`
     }
 
     tiles.forEach((tile, index) => {
@@ -42,8 +51,8 @@ export default class ArrowService {
   clear () {
     this.tileIndexes = null
     this.group.removeAll(true)
-    this.damageText.fill = '#f00'
-    this.damageText.alpha = 0
+    this.valueText.fill = '#f00'
+    this.valueText.alpha = 0
     this.arrows = []
   }
 
