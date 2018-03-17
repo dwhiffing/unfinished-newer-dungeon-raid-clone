@@ -71,7 +71,7 @@ export default class extends Phaser.Sprite {
     if (this.frame === 3) {
       x = this.game.width - 100
     }
-    this.matchTween(x, this.game.height - 170).then(this._hide.bind(this))
+    this.matchTween(x, -130).then(this._hide.bind(this))
   }
 
   tween (y, duration) {

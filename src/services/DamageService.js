@@ -151,7 +151,7 @@ export default class DamageService {
   }
 
   _animateDamage (x) {
-    const opts = { delay: 1500, y: this.game.height - 100, x }
+    const opts = { delay: 1500, y: 100, x }
     const tween = this.game.add
       .tween(this.banner)
       .to(opts, 500, Phaser.Easing.None)

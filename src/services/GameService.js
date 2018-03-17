@@ -30,8 +30,8 @@ export default class GameService {
     this._getHurt = this._getHurt.bind(this)
     this._setMenuState = this._setMenuState.bind(this)
 
-    this.uiService = new UIService(this.game, this.game.width, this.game.height)
     this.tileService = new TileService(this.game, _x, _y)
+    this.uiService = new UIService(this.game, this.game.width, this.game.height)
     this.playerService = new PlayerService(this.game, _x, _y)
     this.damageService = new DamageService(this.game, _x, _y)
     this.arrowService = new ArrowService(this.game, _x, _y)
