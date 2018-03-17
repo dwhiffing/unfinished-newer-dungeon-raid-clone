@@ -27,7 +27,6 @@ export default class GameService {
 
     this.allowInput = this.allowInput.bind(this)
     this.postTurn = this.postTurn.bind(this)
-    this._getHurt = this._getHurt.bind(this)
     this._setMenuState = this._setMenuState.bind(this)
 
     this.tileService = new TileService(this.game, _x, _y)
@@ -116,11 +115,7 @@ export default class GameService {
 
   postTurn (enemies) {
     this.menuService.show().then(upgrade => {
-      if (upgrade) {
-        if (upgrade.effect[0] === 'statIncrease') {
-          this.playerService[upgrade.effect[1]] += upgrade.effect[2]
-        }
-      }
+      this.playerService.handleUpgrade(upgrade)
       this.applyDamage(enemies)
     })
   }
@@ -146,7 +141,6 @@ export default class GameService {
   }
 
   applyDamage (enemies) {
-    this.playerService.state = 0
     this.damageService
       .attack(enemies, this.playerService.armor)
       .then(this.allowInput)
@@ -170,16 +164,6 @@ export default class GameService {
     }
   }
 
-  _getHurt (damage, type) {
-    if (type === 'armor') {
-      this._vibrate(50)
-      this.playerService.armor -= damage
-    } else if (type === 'health') {
-      this._vibrate(200)
-      this.playerService.health -= damage
-    }
-  }
-
   _gameOver () {
     this.game.state.start('GameOver')
     localStorage.removeItem('player')
@@ -199,10 +183,11 @@ export default class GameService {
       playerData,
       this.uiService.update,
       this._gameOver,
-      this._setMenuState
+      this._setMenuState,
+      this._vibrate
     )
     this.tileService.init(tileData)
-    this.damageService.init(this._getHurt)
+    this.damageService.init(this.playerService.takeDamage)
     this.matchService.init(this.tileService.tiles)
     this.uiService.init(_x, _y, this.playerService.getStats())
   }

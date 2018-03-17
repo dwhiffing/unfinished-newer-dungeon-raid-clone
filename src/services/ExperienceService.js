@@ -1,37 +1,42 @@
 export default class ExperienceService {
-  constructor ({ xp = 0, xpMultiplier = 100 } = {}) {
+  constructor (param) {
     this.largestXp = 0
-    this._xp = xp
-    this.xpMultiplier = xpMultiplier
+
+    if (typeof param === 'object') {
+      const { xpMultiplier = 100, total = 0 } = param
+      this.total = total
+      this.xpMultiplier = xpMultiplier
+    } else if (typeof param === 'number') {
+      this.xpMultiplier = param
+      this.total = 0
+    }
   }
 
   get xp () {
-    return this._xp - this._xpForNextLevel(this.level - 1)
+    return this.total - this.xpForNextLevel(this.level - 1)
   }
 
   get totalXp () {
-    return this._xp
+    return this.total
   }
 
   set xp (n) {
-    this._xp = n
-    return this._xp
+    this.total = n
+    return this.total
   }
 
   get level () {
     const level = Math.ceil(
-      (Math.sqrt(1 + 8 * ((this._xp + 1) / this.xpMultiplier)) - 1) / 2
+      (Math.sqrt(1 + 8 * ((this.total + 1) / this.xpMultiplier)) - 1) / 2
     )
     return level
   }
 
   get xpToNext () {
-    return (
-      this._xpForNextLevel(this.level) - this._xpForNextLevel(this.level - 1)
-    )
+    return this.xpForNextLevel(this.level) - this.xpForNextLevel(this.level - 1)
   }
 
-  _xpForNextLevel (level) {
+  xpForNextLevel (level) {
     return level * (level + 1) / 2 * this.xpMultiplier
   }
 }

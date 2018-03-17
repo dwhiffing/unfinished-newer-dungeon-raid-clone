@@ -1,18 +1,22 @@
 export default {
   1: {
-    title: 'Armor',
-    description: 'description'
+    title: 'Sword',
+    description: 'description',
+    effect: ['item', { damagePerSword: 1 }]
   },
   2: {
-    title: 'Helmet',
-    description: 'description'
+    title: 'Shield',
+    description: 'description',
+    effect: ['item', { armorPerShield: 1 }]
   },
   3: {
-    title: 'Sword',
-    description: 'description'
+    title: 'Armor',
+    description: 'description',
+    effect: ['item', { maxArmor: 1 }]
   },
   4: {
-    title: 'Shield',
-    description: 'description'
+    title: 'Ring',
+    description: 'description',
+    effect: ['item', { healthPerPotion: 1 }]
   }
 }
