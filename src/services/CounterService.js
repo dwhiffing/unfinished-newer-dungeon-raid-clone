@@ -7,15 +7,20 @@ export default class CounterService {
     if (typeof param === 'object') {
       const { value = 0, max = 0, total = 0 } = param
       this._value = value
-      this.max = max
+      this._max = max
       this.total = total
       this.overflow = 0
     } else if (typeof param === 'number') {
       this._value = param
-      this.max = param
+      this._max = param
       this.total = 0
       this.overflow = 0
     }
+  }
+
+  set max (newValue) {
+    this._max = newValue
+    this._value = this.max
   }
 
   set value (newValue) {
@@ -40,5 +45,9 @@ export default class CounterService {
 
   get value () {
     return this._value
+  }
+
+  get max () {
+    return this._max
   }
 }

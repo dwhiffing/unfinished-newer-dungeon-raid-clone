@@ -1,18 +1,18 @@
 export default {
   1: {
-    title: 'Heal',
+    title: '+Base Damage',
     description: 'description'
   },
   2: {
-    title: 'Bomb',
+    title: '+Max Armor',
     description: 'description'
   },
   3: {
-    title: 'Wish',
+    title: '+Max Health',
     description: 'description'
   },
   4: {
-    title: 'Hunt',
+    title: '+Bonus chance',
     description: 'description'
   }
 }

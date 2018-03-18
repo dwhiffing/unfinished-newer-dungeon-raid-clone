@@ -6,12 +6,9 @@ import pick from 'lodash/pick'
 // managing and updating player stats
 // Relates to: DamageService
 
-const INITIAL_HEALTH = 50
 const GOLD_MULTI = 5
 const UPGRADE_MULTI = 5
 const XP_MULTI = 5
-const INITIAL_ARMOR = 7
-const INITIAL_BASE_DAMAGE = 5
 const INITIAL_WEAPON_DAMAGE = 3
 
 export default class PlayerService {
@@ -26,18 +23,22 @@ export default class PlayerService {
     stateCallback,
     vibrateCallback
   ) {
+    save = save || {}
+
     this.updateStatsCallback = updateStatsCallback
     this.vibrateCallback = vibrateCallback
     this.gameOverCallback = gameOverCallback
     this.stateCallback = stateCallback
 
-    save = save || {}
-
-    this.healthCounter = new CounterService(save.health || INITIAL_HEALTH)
-    this.armorCounter = new CounterService(save.armor || INITIAL_ARMOR)
     this.goldXpService = new LevelService(save.gold || GOLD_MULTI)
     this.upgradeXpService = new LevelService(save.upgrade || UPGRADE_MULTI)
     this.playerXpService = new LevelService(save.player || XP_MULTI)
+    this.healthCounter = new CounterService(save.health || this.getBaseHealth())
+    this.armorCounter = new CounterService(save.armor || this.getBaseArmor())
+  }
+
+  get health () {
+    return this.healthCounter.value
   }
 
   set health (newHealth) {
@@ -50,43 +51,27 @@ export default class PlayerService {
     this.updateStatsCallback(this.getStats())
   }
 
-  set armor (newArmor) {
-    this.armorCounter.value = newArmor
-    this.upgrade += this.armorCounter.overflow
-
-    this.updateStatsCallback(this.getStats())
-  }
-
-  set gold (newValue) {
-    this.updateXpService(this.goldXpService, newValue, 1)
-  }
-
-  set upgrade (newValue) {
-    this.updateXpService(this.upgradeXpService, newValue, 2)
-  }
-
-  set experience (newValue) {
-    this.updateXpService(this.playerXpService, newValue, 3)
-  }
-
-  get health () {
-    return this.healthCounter.value
-  }
-
-  get maxHealth () {
-    return this.healthCounter.max
-  }
-
   get armor () {
     return this.armorCounter.value
   }
 
-  get maxArmor () {
-    return this.armorCounter.max
+  set armor (newArmor) {
+    this.armorCounter.value = newArmor
+    this.updateXpService(this.upgradeXpService, this.armorCounter.overflow, 2)
+
+    this.updateStatsCallback(this.getStats())
   }
 
-  get upgrade () {
-    return this.upgradeXpService.totalXp
+  get baseDamage () {
+    return this.playerXpService.level * 1
+  }
+
+  get weaponDamage () {
+    return INITIAL_WEAPON_DAMAGE
+  }
+
+  get baseBonusChance () {
+    return this.playerXpService.level * 0.025
   }
 
   get gold () {
@@ -97,17 +82,22 @@ export default class PlayerService {
     return this.playerXpService.totalXp
   }
 
-  get baseDamage () {
-    return INITIAL_BASE_DAMAGE
+  set experience (newValue) {
+    this.updateXpService(this.playerXpService, newValue, 2)
   }
 
-  get weaponDamage () {
-    return INITIAL_WEAPON_DAMAGE
+  set gold (newValue) {
+    this.updateXpService(
+      this.goldXpService,
+      this.goldXpService.totalXp + newValue,
+      1
+    )
   }
 
   update = ({ gold = 0, potion = 0, armor = 0, experience = 0 }) => {
     this.health += potion
     this.armor += armor
+
     this.gold += gold
     this.experience += experience
 
@@ -130,6 +120,10 @@ export default class PlayerService {
 
     if (levelBeforeChange !== service.level) {
       this.stateCallback(state)
+      if (state === 2) {
+        this.healthCounter.max = this.getBaseHealth()
+        this.armorCounter.max = this.getBaseArmor()
+      }
     }
 
     this.updateStatsCallback(this.getStats())
@@ -146,9 +140,10 @@ export default class PlayerService {
   }
 
   getStats = () => ({
-    health: this.healthCounter,
-    armor: this.armorCounter,
     baseDamage: this.baseDamage,
+    armor: this.armorCounter,
+    health: this.healthCounter,
+    bonus: this.baseBonusChance,
     weaponDamage: this.weaponDamage,
     gold: this.goldXpService,
     player: this.playerXpService,
@@ -162,4 +157,7 @@ export default class PlayerService {
     health: pick(this.healthCounter, ['value', 'max', 'total']),
     armor: pick(this.armorCounter, ['value', 'max', 'total'])
   })
+
+  getBaseArmor = () => 4 + this.playerXpService.level * 2
+  getBaseHealth = () => this.playerXpService.level * 10
 }
