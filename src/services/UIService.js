@@ -31,24 +31,24 @@ export default class UIService {
 
     this.texts = {
       gold: this._initText(50, 35, '0/50', '#ffff00', 24),
-      upgrade: this._initText(50, 75, '0/100', '#6562F0', 24),
-      base: this._initText(x / 2, 40, '', '#ffffff', 18),
+      item: this._initText(50, 75, '0/100', '#6562F0', 24),
+      damage: this._initText(x / 2, 40, '', '#ffffff', 18),
       armor: this._initText(x / 2, 80, '0/4', '#6562F0', 30),
       health: this._initText(x - 50, 35, '50/50', '#ff0000', 24),
-      experience: this._initText(x - 50, 75, '0/100', '#00ff00', 24)
+      exp: this._initText(x - 50, 75, '0/100', '#00ff00', 24)
     }
 
     this.update(stats)
   }
 
   update = stats => {
-    const { health, armor, gold, upgrade: up, player: play } = stats
+    const { health, armor, gold, item, exp } = stats
     this.texts.health.text = `${health.value}/${health.max}`
     this.texts.armor.text = `${armor.value}/${armor.max}`
     this.texts.gold.text = `${gold.level}: ${gold.xp}/${gold.toNext}`
-    this.texts.upgrade.text = `${up.level}: ${up.xp}/${up.toNext}`
-    this.texts.experience.text = `${play.level}: ${play.xp}/${play.toNext}`
-    this.texts.base.text = `${stats.baseDamage}/${stats.weaponDamage}`
+    this.texts.item.text = `${item.level}: ${item.xp}/${item.toNext}`
+    this.texts.exp.text = `${exp.level}: ${exp.xp}/${exp.toNext}`
+    this.texts.damage.text = `${stats.baseDamage}/${stats.weaponDamage}`
   }
 
   _initText (x, y, string, fill, size) {

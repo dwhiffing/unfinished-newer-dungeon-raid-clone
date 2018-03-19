@@ -13,7 +13,7 @@ const titles = ['Shop!', 'Upgrade!', 'Level Up!']
 export default class MenuService {
   constructor (game) {
     this.game = game
-    this.state = 0
+    this.state = -1
     this.menu = new Menu(this.game, this.game.width / 2, this.game.height / 2)
   }
 
@@ -25,7 +25,7 @@ export default class MenuService {
     return new Promise(resolve => {
       const menu = this.getMenu()
       if (menu) {
-        this.state = 0
+        this.state = -1
         this.menu.show({
           data: menu.data,
           title: menu.title,
@@ -38,8 +38,8 @@ export default class MenuService {
   }
 
   getMenu () {
-    const data = datum[this.state - 1]
-    const title = titles[this.state - 1]
+    const data = datum[this.state]
+    const title = titles[this.state]
     return data && title ? { data, title } : null
   }
 }
