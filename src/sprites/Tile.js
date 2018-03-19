@@ -1,6 +1,6 @@
 import Phaser from 'phaser'
 
-const ANIMATION_DURATION = 180
+const ANIMATION_DURATION = 140
 const EXTRA = 3
 
 // Enemy Sword Shield Potion Gold
@@ -87,10 +87,10 @@ export default class extends Phaser.Sprite {
     return new Promise(resolve => {
       const tween = this.game.add
         .tween(this)
-        .to({ x, y }, 1000, Phaser.Easing.Linear.None, true)
+        .to({ x, y }, 500, Phaser.Easing.Linear.None, true)
       this.game.add
         .tween(this.scale)
-        .to({ x: 0.2, y: 0.2 }, 1000, Phaser.Easing.Linear.None, true)
+        .to({ x: 0.2, y: 0.2 }, 500, Phaser.Easing.Linear.None, true)
       tween.onComplete.add(resolve)
     })
   }

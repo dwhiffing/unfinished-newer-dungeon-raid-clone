@@ -87,7 +87,7 @@ export default class DamageService {
       enemies.forEach((enemy, i) => {
         this.attacks.find(a => !a.visible).reset(enemy.index)
       })
-      setTimeout(resolve, 500)
+      setTimeout(resolve, 350)
     })
   }
 
@@ -117,9 +117,9 @@ export default class DamageService {
 
   _hideOverlay () {
     return new Promise(resolve => {
-      this._tween(this.banner, { alpha: 0 }, 500)
+      this._tween(this.banner, { alpha: 0 }, 350)
 
-      const overlayTween = this._tween(this.graphics, { alpha: 0 }, 500)
+      const overlayTween = this._tween(this.graphics, { alpha: 0 }, 350)
       overlayTween.onComplete.add(resolve)
     })
   }
@@ -127,7 +127,7 @@ export default class DamageService {
   _tween (thing, opts, duration) {
     const tween = this.game.add
       .tween(thing)
-      .to({ alpha: 0 }, 500, Phaser.Easing.None, true)
+      .to({ alpha: 0 }, 350, Phaser.Easing.None, true)
     return tween
   }
 
@@ -135,7 +135,7 @@ export default class DamageService {
     this.tweens = [
       this.game.add
         .tween(this.banner)
-        .to({ alpha: 1 }, 500, Phaser.Easing.None, true)
+        .to({ alpha: 1 }, 350, Phaser.Easing.None, true)
     ]
 
     this.banner.text = `${damage} DMG`
@@ -151,10 +151,10 @@ export default class DamageService {
   }
 
   _animateDamage (x) {
-    const opts = { delay: 1500, y: 100, x }
+    const opts = { delay: 1350, y: 100, x }
     const tween = this.game.add
       .tween(this.banner)
-      .to(opts, 500, Phaser.Easing.None)
+      .to(opts, 350, Phaser.Easing.None)
     return tween
   }
 
